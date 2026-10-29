@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f6f1">
+  <title>首页 · 24001010806 孙绍词 · 漫行 City Guide</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home"><span class="brand-mark">漫</span><span><strong>漫行</strong><small>CITY GUIDE</small></span></a>
+      <p class="nav-caption">探索城市</p>
+      <nav class="primary-nav" aria-label="主导航">
+        <button class="nav-item active" data-page="home">⌂ <span>首页</span></button>
+        <button class="nav-item" data-page="nearby">⌖ <span>周边</span></button>
+        <button class="nav-item" data-page="taxi">▱ <span>打车</span></button>
+        <button class="nav-item" data-page="trips">▦ <span>行程</span></button>
+        <button class="nav-item" data-page="discover">✳ <span>发现</span></button>
+        <button class="nav-item" data-page="profile">◉ <span>我的</span></button>
+        <button class="nav-item" data-page="category">▤ <span>分类首页</span></button>
+        <button class="nav-item" data-page="detail">◈ <span>内容详情</span></button>
+        <button class="nav-item" data-page="settings">⚙ <span>个人设置</span></button>
+        <button class="nav-item" data-page="admin">▥ <span>后台管理</span></button>
+      </nav>
+      <div class="sidebar-bottom"><div class="weather"><span>☼</span><div><strong>杭州 · 22°</strong><small>适合出门走走</small></div></div><button class="help-link" data-toast="客服小漫正在为你服务">需要帮助？ <span>↗</span></button></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar"><div class="mobile-brand"><span class="brand-mark">漫</span><strong>漫行</strong></div><button class="location" data-toast="已切换城市">⌖ 杭州 <span>⌄</span></button><label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜地点、路线或灵感" aria-label="搜索地点、路线或灵感"><kbd>⌘ K</kbd></label><button class="bell" data-toast="暂时没有新消息" aria-label="消息">♧<i></i></button><button class="user-chip" data-page="profile"><span class="avatar">孙</span> 孙同学⌄</button></header>
+
+      <div class="content">
+        <section class="page active sun_shao_ci_home" id="page-home" data-title="首页">
+          <div class="welcome"><div><p class="eyebrow">MONDAY, SEPTEMBER 28 <i></i></p><h1>今天，想去哪里？</h1><p class="intro">把熟悉的日常，走成一段新的风景。</p></div><span class="weather-pill">☀ 晴朗 · 22°</span></div>
+          <div class="hero"><img src="img/lake.jpg" alt="湖边与群山相映的杭州风景"><div class="hero-shade"></div><div class="hero-copy"><span>THIS WEEKEND IN HANGZHOU</span><h2>沿着湖风，<br>去过一个慢周末。</h2><p>灵隐寺 · 龙井村 · 西湖日落</p><button class="light-button" data-page="discover">发现周末灵感　↗</button></div><small class="hero-count">01　―　03</small></div>
+          <div class="section-head"><div><p class="eyebrow">YOUR CITY, YOUR PACE</p><h2>一键出发</h2></div><button class="text-button" data-page="discover">查看全部 →</button></div>
+          <div class="quick-grid"><button class="quick walk" data-page="nearby"><span class="quick-symbol">⌖</span><span><strong>附近好去处</strong><small>咖啡、展览和街角</small></span><b>↗</b></button><button class="quick ride" data-page="taxi"><span class="quick-symbol">▱</span><span><strong>现在去打车</strong><small>预计 3 分钟接驾</small></span><b>↗</b></button><button class="quick trip" data-page="trips"><span class="quick-symbol">▦</span><span><strong>我的行程</strong><small>下一站，湖滨步行街</small></span><b>↗</b></button></div>
+          <div class="section-head"><div><p class="eyebrow">A LITTLE INSPIRATION</p><h2>杭州，刚刚好</h2></div><button class="text-button" data-page="nearby">探索周边 →</button></div>
+          <div class="place-grid"><button class="place" data-page="nearby"><img src="img/lake.jpg" alt="阳光照进街角咖啡馆"><small>咖啡 · 3 分钟</small><strong>风禾咖啡馆</strong><span>4.8 <b>★</b> · 一杯手冲，坐到日落</span></button><button class="place" data-page="nearby"><img src="img/lake.jpg" alt="城市中的当代建筑与行人"><small>展览 · 12 分钟</small><strong>天目里艺术空间</strong><span>4.9 <b>★</b> · 建筑与艺术的散步</span></button><button class="place" data-page="nearby"><img src="img/lake.jpg" alt="树荫下的湖边绿道"><small>散步 · 8 分钟</small><strong>湖滨慢行道</strong><span>免费开放 · 去吹一会儿风</span></button></div>
+          <footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+
+        <section class="page sun_shao_ci_nearby" id="page-nearby" data-title="周边" hidden>
+          <div class="page-heading"><div><p class="eyebrow">AROUND YOU · HANGZHOU</p><h1>附近，值得多走几步。</h1><p class="intro">从你所在的位置出发，发现城市的小惊喜。</p></div><button class="dark-button" data-toast="已更新到你当前位置">⌖ 定位到我</button></div>
+          <div class="filters"><button class="filter selected" data-filter="all">全部 <small>24</small></button><button class="filter" data-filter="coffee">咖啡</button><button class="filter" data-filter="food">美食</button><button class="filter" data-filter="culture">展览</button><button class="filter" data-filter="nature">散步</button></div>
+          <div class="nearby-layout"><div class="nearby-list">
+            <article class="nearby-item" data-category="coffee"><img src="img/lake.jpg" alt="咖啡馆里的咖啡与座位"><div><small>咖啡 · 独立小店</small><h2>树下咖啡研究所</h2><p>手冲咖啡 · 安静的庭院座位</p><span>4.8 <b>★</b>　步行 4 分钟　¥¥</span></div><button class="save" data-save aria-label="收藏树下咖啡研究所">♡</button></article>
+            <article class="nearby-item" data-category="culture"><img src="img/lake.jpg" alt="展览空间中的当代艺术作品"><div><small>展览 · 当代艺术</small><h2>良渚艺术中心</h2><p>建筑展「日常的边界」正在展出</p><span>4.9 <b>★</b>　骑行 12 分钟　¥38 起</span></div><button class="save" data-save aria-label="收藏良渚艺术中心">♡</button></article>
+            <article class="nearby-item" data-category="food"><img src="img/lake.jpg" alt="餐厅里的餐桌与柔和灯光"><div><small>美食 · 本地风味</small><h2>南山小馆</h2><p>杭帮家常菜 · 桂花糖藕今日供应</p><span>4.7 <b>★</b>　步行 9 分钟　¥¥</span></div><button class="save" data-save aria-label="收藏南山小馆">♡</button></article>
+            <article class="nearby-item" data-category="nature"><img src="img/lake.jpg" alt="山水之间的林间步道"><div><small>散步 · 城市绿道</small><h2>北山街梧桐道</h2><p>一段适合傍晚慢慢走的林荫路</p><span>4.9 <b>★</b>　步行 15 分钟　免费</span></div><button class="save" data-save aria-label="收藏北山街梧桐道">♡</button></article>
+          </div><aside class="map-panel"><div class="map"><span class="map-lake">西湖</span><span class="map-pin pin-a">☕</span><span class="map-pin pin-b">✦</span><span class="map-pin pin-c">⌖</span><span class="map-pin pin-d">餐</span><span class="map-label">你在这里 <i></i></span><span class="map-scale">500 m</span></div><p>● 正在浏览　<strong>杭州 · 湖滨街道</strong></p></aside></div><footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+
+        <section class="page sun_shao_ci_taxi" id="page-taxi" data-title="打车" hidden>
+          <div class="page-heading"><div><p class="eyebrow">RIDE, YOUR WAY</p><h1>下一程，现在出发。</h1><p class="intro">舒适、准时，把路上的时间也还给你。</p></div><span class="safety">✳ 全程安全守护</span></div>
+          <div class="ride-layout"><div class="ride-form"><div class="route-field"><span>出发</span><input value="杭州市 · 湖滨银泰 A 区" aria-label="上车地点"></div><div class="route-field"><span>到达</span><input id="destination" placeholder="你想去哪里？" aria-label="目的地"></div><button class="map-link" data-toast="已打开地图选点">⌖ 地图上选点　↗</button><p class="form-label">选择车型</p><div class="vehicle-options"><button class="vehicle selected" data-vehicle="舒适型" data-price="18"><span>🚘</span><strong>舒适型</strong><small>3 分钟</small><b>¥18</b></button><button class="vehicle" data-vehicle="快车" data-price="22"><span>🚗</span><strong>快车</strong><small>2 分钟</small><b>¥22</b></button><button class="vehicle" data-vehicle="优享型" data-price="31"><span>🚙</span><strong>优享型</strong><small>5 分钟</small><b>¥31</b></button></div><p class="ride-note">◷ 现在出发　 ·　⌑ 1 位乘客　 ·　✳ 行程分享已开启</p><button class="ride-submit" id="request-ride">呼叫舒适型 · ¥18 <span>→</span></button><p class="fine-print">预估价格以实际行程为准 · 每一程都有安全保障</p></div><aside class="ride-aside"><div class="ride-photo"><img src="img/lake.jpg" alt="在城市道路上行驶的汽车"><div><small>● 附近车辆充足</small><strong>把城市，<br>交给下一程。</strong></div></div><p>✳　<strong>安心每一程</strong><small>行程分享 · 紧急联系人</small></p><p>◷　<strong>价格先知道</strong><small>确认车型后展示预估价</small></p></aside></div><footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+
+        <section class="page sun_shao_ci_trips" id="page-trips" data-title="行程" hidden>
+          <div class="page-heading"><div><p class="eyebrow">YOUR JOURNEYS</p><h1>路上的每一站。</h1><p class="intro">最近的目的地，和还没走完的城市故事。</p></div><button class="dark-button" data-page="taxi">＋ 新建行程</button></div>
+          <div class="trip-tabs"><button class="trip-tab selected" data-trip-filter="upcoming">即将开始　<span>1</span></button><button class="trip-tab" data-trip-filter="past">过往行程</button></div>
+          <div class="trip-list"><article class="trip" data-status="upcoming"><div class="trip-date"><strong>28</strong><small>今天 · 周一</small></div><div class="stops"><p><small>14:30 · 出发地</small><strong>湖滨银泰 A 区</strong></p><p><small>约 18 分钟后</small><strong>天目里艺术空间</strong></p></div><div class="trip-action"><small class="status ready">即将出发</small><button data-page="taxi">查看路线 →</button></div></article><article class="trip" data-status="past"><div class="trip-date"><strong>26</strong><small>周六 · 9 月</small></div><div class="stops"><p><small>09:20 · 出发地</small><strong>武林广场</strong></p><p><small>10:05 · 到达</small><strong>灵隐寺</strong></p></div><div class="trip-action"><small class="status">已完成</small><button data-toast="行程详情已准备好">行程详情 →</button></div></article><article class="trip" data-status="past"><div class="trip-date"><strong>21</strong><small>周一 · 9 月</small></div><div class="stops"><p><small>16:10 · 出发地</small><strong>龙翔桥地铁站</strong></p><p><small>16:42 · 到达</small><strong>小河直街历史街区</strong></p></div><div class="trip-action"><small class="status">已完成</small><button data-toast="行程详情已准备好">行程详情 →</button></div></article></div><div class="trip-tip"><span>✳</span><p><strong>给路程一点余裕</strong><br>预计出发前 5 分钟，我们会提醒你。</p><button data-toast="提醒设置已开启">开启提醒 →</button></div><footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+
+        <section class="page sun_shao_ci_discover" id="page-discover" data-title="发现" hidden>
+          <div class="page-heading"><div><p class="eyebrow">NOT JUST A DESTINATION</p><h1>灵感，正在附近发生。</h1><p class="intro">把地图折起来，今天跟着好奇心走。</p></div><button class="dark-button" data-toast="已为你收藏本周精选">♡ 我的收藏</button></div>
+          <div class="feature"><img src="img/lake.jpg" alt="清晨阳光穿过山间薄雾"><div class="feature-shade"></div><div class="feature-copy"><small>本周城市漫游 · 01</small><h2>在杭州，<br>把周末过成一首诗。</h2><p>一条从山脚到湖边的慢行路线，4 个不赶时间的停留。</p><button class="light-button" data-toast="周末漫游路线已加入收藏">收藏这条路线 ↗</button></div><span class="duration">步行约 2.5 小时</span></div>
+          <div class="section-head"><div><p class="eyebrow">CURATED FOR YOU</p><h2>今天的灵感清单</h2></div><span class="eyebrow">3 STORIES</span></div><div class="story-grid"><button class="story" data-toast="已打开：藏在老街里的早午餐"><img src="img/lake.jpg" alt="咖啡和早餐摆在木桌上"><small>CITY WALK · 4 SPOTS</small><strong>藏在老街里的早午餐</strong><span>从一杯咖啡，开始今天的散步。</span></button><button class="story" data-toast="已打开：不看攻略的西湖傍晚"><img src="img/lake.jpg" alt="山水间的户外风景"><small>SLOW TRAVEL · 90 MIN</small><strong>不看攻略的西湖傍晚</strong><span>日落之前，沿着水边随便走走。</span></button><button class="story" data-toast="已打开：给自己半天的艺术假期"><img src="img/lake.jpg" alt="美术馆中的绘画展览"><small>ART & CULTURE · 3 SPOTS</small><strong>给自己半天的艺术假期</strong><span>三间小展馆，一个慢下来的下午。</span></button></div><footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+
+        <section class="page sun_shao_ci_profile" id="page-profile" data-title="我的" hidden>
+          <div class="page-heading"><div><p class="eyebrow">YOUR CITY, YOUR STORIES</p><h1>你好，孙同学。</h1><p class="intro">每一次出发，都算数。</p></div></div>
+          <div class="profile-panel"><div class="profile-person"><span class="avatar big">林</span><div><h2>孙同学 <small>漫行会员</small></h2><p>加入漫行的第 128 天 · 杭州</p></div><button class="edit" data-toast="个人资料编辑已打开">编辑资料 ↗</button></div><div class="stats"><div><strong>12</strong><span>走过的城市</span></div><div><strong>38</strong><span>收藏的地点</span></div><div><strong>16</strong><span>完成的行程</span></div><div><strong>284<small>km</small></strong><span>累计探索距离</span></div></div></div>
+          <div class="profile-columns"><div><div class="section-head"><div><p class="eyebrow">SAVED FOR LATER</p><h2>最近收藏</h2></div><button class="text-button" data-page="nearby">查看全部 →</button></div><div class="saved-list"><button class="saved-place" data-page="nearby"><img src="img/lake.jpg" alt="风禾咖啡馆"><span><strong>风禾咖啡馆</strong><small>咖啡 · 西湖区</small></span><b>↗</b></button><button class="saved-place" data-page="nearby"><img src="img/lake.jpg" alt="天目里艺术空间"><span><strong>天目里艺术空间</strong><small>展览 · 滨江区</small></span><b>↗</b></button><button class="saved-place" data-page="nearby"><img src="img/lake.jpg" alt="北山街梧桐道"><span><strong>北山街梧桐道</strong><small>散步 · 西湖边</small></span><b>↗</b></button></div></div><div><div class="section-head"><div><p class="eyebrow">ACCOUNT</p><h2>账户与设置</h2></div></div><div class="settings"><button data-toast="个人信息设置已打开">◉　个人资料 <span>→</span></button><button data-toast="通知设置已打开">♧　消息与通知 <span>→</span></button><button data-toast="安全中心已打开">✳　出行安全中心 <span>→</span></button><button data-toast="帮助中心已打开">?　帮助与反馈 <span>→</span></button></div></div></div><footer>漫行 CITY GUIDE <span>把时间留给沿途。</span></footer>
+        </section>
+        <section class="page sun_shao_ci_category" id="page-category" data-title="分类首页" hidden>
+          <div class="page-heading"><div><p class="eyebrow">CHOOSE YOUR MOOD</p><h1>今天，按心情逛杭州。</h1><p class="intro">从一杯咖啡到一段湖边散步，挑一个方向出发。</p></div><button class="dark-button" data-page="nearby">查看附近 →</button></div>
+          <div class="category-grid"><button class="category-tile category-coffee" data-page="nearby"><span>01 / 慢下来</span><strong>咖啡与早午餐</strong><small>找一间舒服的小店</small></button><button class="category-tile category-culture" data-page="discover"><span>02 / 看一点</span><strong>展览与艺术</strong><small>把下午留给灵感</small></button><button class="category-tile category-nature" data-page="nearby"><span>03 / 走出去</span><strong>湖边与绿道</strong><small>沿着风景继续走</small></button><button class="category-tile category-food" data-page="nearby"><span>04 / 尝一口</span><strong>本地风味</strong><small>今天吃点杭州味道</small></button></div>
+          <div class="section-head"><div><p class="eyebrow">LOCAL PICKS</p><h2>本周编辑精选</h2></div><button class="text-button" data-page="detail">打开精选 →</button></div><div class="category-feature"><img src="img/resort.jpg" alt="水岸建筑与倒影"><div><small>HANGZHOU · SLOW WEEKEND</small><h2>沿着水岸，把周末还给自己。</h2><button class="light-button" data-page="detail">阅读本期故事 ↗</button></div></div>
+        </section>
+        <section class="page sun_shao_ci_detail" id="page-detail" data-title="内容详情" hidden>
+          <button class="back-link" data-page="discover">← 返回发现</button><article class="detail-article"><img src="img/coast.jpg" alt="海岸与蓝色海湾"><p class="eyebrow">CITY WALK · 4 SPOTS · 2.5 HOURS</p><h1>在杭州，把周末过成一首诗。</h1><p class="detail-lead">不赶时间，从城市边缘慢慢走向水边。留出几个停靠点，也给偶遇一点空间。</p><div class="detail-meta"><span>漫行编辑部</span><span>2026 年 10 月 · 6 分钟阅读</span></div><h2>从第一杯咖啡开始</h2><p>先在街角坐一会儿，再沿着树荫往湖边走。路线不必严格，看到喜欢的巷口就转进去。</p><h2>把目的地留到最后</h2><p>傍晚的水面会慢慢变亮。带上轻便外套，选一处视野开阔的地方停下来，今天就算走得很好。</p><button class="dark-button" data-page="trips">把路线加入行程 →</button></article>
+        </section>
+        <section class="page sun_shao_ci_settings" id="page-settings" data-title="个人设置" hidden>
+          <div class="page-heading"><div><p class="eyebrow">PREFERENCES</p><h1>按你的节奏来。</h1><p class="intro">管理个人偏好与出行提醒。</p></div><button class="dark-button" data-page="profile">返回我的 →</button></div>
+          <div class="settings-panel"><label><span><strong>行程出发提醒</strong><small>出发前 5 分钟提醒我</small></span><input type="checkbox" checked></label><label><span><strong>周末灵感简报</strong><small>每周五推送城市精选</small></span><input type="checkbox" checked></label><label><span><strong>收藏同步</strong><small>在本设备保存你的收藏</small></span><input type="checkbox" checked></label><label><span><strong>减少动态效果</strong><small>尊重系统的减少动态设置</small></span><input type="checkbox"></label><button class="dark-button" data-toast="设置已保存到本设备">保存设置</button></div>
+        </section>
+        <section class="page sun_shao_ci_admin" id="page-admin" data-title="后台管理" hidden>
+          <div class="page-heading"><div><p class="eyebrow">CONTENT OPERATIONS</p><h1>城市内容概览。</h1><p class="intro">本地 mock 数据仪表盘 · 数据仅供课程演示</p></div><button class="dark-button" data-toast="数据已刷新">↻ 刷新数据</button></div>
+          <div class="admin-metrics" id="admin-metrics" aria-live="polite"></div><div class="admin-columns"><section><div class="section-head"><div><p class="eyebrow">CONTENT HEALTH</p><h2>内容状态</h2></div></div><div class="admin-row"><span>地点收录</span><strong>24 条</strong><small class="status ready">正常</small></div><div class="admin-row"><span>本周灵感</span><strong>3 篇</strong><small class="status ready">已发布</small></div><div class="admin-row"><span>用户反馈</span><strong>6 条</strong><small class="status">待处理</small></div></section><section><div class="section-head"><div><p class="eyebrow">QUICK ACCESS</p><h2>管理入口</h2></div></div><button class="admin-action" data-page="nearby">地点与分类 <span>→</span></button><button class="admin-action" data-page="discover">灵感内容 <span>→</span></button><button class="admin-action" data-page="trips">行程记录 <span>→</span></button></section></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <nav class="mobile-nav" aria-label="移动端主导航"><button class="mobile-item active" data-page="home">⌂<span>首页</span></button><button class="mobile-item" data-page="nearby">⌖<span>周边</span></button><button class="mobile-item" data-page="taxi">▱<span>打车</span></button><button class="mobile-item" data-page="trips">▦<span>行程</span></button><button class="mobile-item" data-page="discover">✳<span>发现</span></button><button class="mobile-item" data-page="profile">◉<span>我的</span></button><button class="mobile-item" data-page="category">▤<span>分类</span></button><button class="mobile-item" data-page="detail">◈<span>详情</span></button><button class="mobile-item" data-page="settings">⚙<span>设置</span></button><button class="mobile-item" data-page="admin">▥<span>后台</span></button></nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

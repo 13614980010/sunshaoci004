@@ -1,0 +1,9 @@
+{
+  "metrics": [
+    {"label":"收录地点","value":"24","unit":"处","change":"本周新增 4 处"},
+    {"label":"灵感内容","value":"12","unit":"篇","change":"本周发布 3 篇"},
+    {"label":"累计行程","value":"386","unit":"次","change":"较上周 + 12%"},
+    {"label":"用户收藏","value":"1,248","unit":"次","change":"较上周 + 8%"}
+  ],
+  "updatedAt": "2026-10-16 09:30"
+}

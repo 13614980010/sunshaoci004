@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>个人自我介绍</title>
+    <!-- 引入外部css文件 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- H5语义标签 -->
+    <header>
+        <h1>个人主页</h1>
+    </header>
+    <nav>
+        <a href=" ">关于我</a >
+        <a href="#ssc_skill">我的技能</a >
+        <a href="#ssc_study">学习经历</a >
+        <a href="#ssc_about">回到个人简介</a >
+    </nav>
+
+    <section id="ssc_about">
+        <h2 class="ssc_title_demo">1.关于我</h2>
+        <h1>一级标题：个人简介</h1>
+        <h2>二级标题：基本信息</h2>
+        <h3>三级标题：爱好</h3>
+        <h4>四级标题</h4>
+        <h5>五级标题</h5>
+        <h6>六级标题</h6>
+
+        <p class="ssc_text_cont">
+            大家好，我是一名计算机专业学生。<em>热爱编程</em>，喜欢<strong>软件开发</strong>，<u>持续学习</u>新技术。
+            <br>
+            对待学习认真踏实，善于思考解决问题。
+        </p >
+        <hr>
+
+        <h2 class="ssc_title_demo">2.图片与超链接</h2>
+        <a href="https://www.baidu.com" target="_blank">百度</a >
+        < img src="./img/1.jpg" alt="个人照片" width="200">
+
+        <h2 class="ssc_title_demo">3.我的爱好列表</h2>
+        <h3>我喜欢做的事情</h3>
+        <ul class="ssc_list_demo" >
+            <li>敲代码</li>
+            <li>看技术文档</li>
+            <li>运动</li>
+        </ul>
+        <ol type="A">
+            <li>计算机网络</li>
+            <li>数据结构</li>
+            <li>Java开发</li>
+        </ol>
+
+        <h2 class="ssc_title_demo">4.个人信息表格</h2>
+        <table id="ssc_info_table" border="2" cellspacing="0" cellpadding="3">
+            <caption>个人信息表</caption>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>专业</th>
+                <th>城市</th>
+            </tr>
+            <tr>
+                <td>XXX</td>
+                <td>20</td>
+                <td>软件工程</td>
+                <td>大连</td>
+            </tr>
+            <tr>
+                <td>孙庆兰</td>
+                <td>21</td>
+                <td>计算机</td>
+                <td>大连</td>
+            </tr>
+        </table>
+
+        <h2 class="ssc_title_demo">5.div块级元素</h2>
+        <div>
+            <p>div特点1：独占一整行，自动前后换行，是块级元素</p >
+            <p>div特点2：可以嵌套任意标签（标题、段落、图片、列表都能放）</p >
+        </div>
+        <div>
+            <p>div可以用来划分页面区块，方便布局。</p >
+        </div>
+    </section>
+
+    <article id="ssc_skill">
+        <h2 class="ssc_title_demo">我的技能</h2>
+        <p>掌握C/C++、Java、Python，熟悉计算机网络、数据结构。</p >
+    </article>
+
+    <aside>
+        <h3>侧边栏：学习笔记</h3>
+        <p>持续更新前端、后端学习记录</p >
+    </aside>
+
+    <footer>
+        <p>©2026 个人自我介绍网页</p >
+    </footer>
+
+</body>
+</html>

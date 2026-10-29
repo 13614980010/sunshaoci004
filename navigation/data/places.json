@@ -1,0 +1,6 @@
+[
+  {"id":1,"category":"coffee","kind":"咖啡 · 独立小店","name":"树下咖啡研究所","description":"手冲咖啡 · 安静的庭院座位","rating":"4.8","distance":"步行 4 分钟","price":"¥¥","image":"img/lake.jpg"},
+  {"id":2,"category":"culture","kind":"展览 · 当代艺术","name":"良渚艺术中心","description":"建筑展「日常的边界」正在展出","rating":"4.9","distance":"骑行 12 分钟","price":"¥38 起","image":"img/resort.jpg"},
+  {"id":3,"category":"food","kind":"美食 · 本地风味","name":"南山小馆","description":"杭帮家常菜 · 桂花糖藕今日供应","rating":"4.7","distance":"步行 9 分钟","price":"¥¥","image":"img/river.jpg"},
+  {"id":4,"category":"nature","kind":"散步 · 城市绿道","name":"北山街梧桐道","description":"一段适合傍晚慢慢走的林荫路","rating":"4.9","distance":"步行 15 分钟","price":"免费","image":"img/coast.jpg"}
+]

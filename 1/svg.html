@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>svg图标</title>
+    <script src="https://at.alicdn.com/t/c/font_5238940_xlu8y7sq3hc.js"></script>
+    <link rel="stylesheet" href="svg.css">
+</head>
+<body>
+    <h2>svg图标</h2>
+    <div class="ssc_tab_nav">
+        <div class="ssc_tab_item" onclick="ssc_changeTab(this)">
+            <svg class="ssc_icon" aria-hidden="true">
+                <use xlink:href="#icon-dengchu"></use>
+                 
+            </svg>
+            <span>登出</span>
+        </div>
+        <div class="ssc_tab_item" onclick="ssc_changeTab(this)">
+            <svg class="ssc_icon" aria-hidden="true">
+                <use xlink:href="#icon-xiaoxi"></use>
+                 
+            </svg>
+            <span>消息</span>
+        </div>
+        <div class="ssc_tab_item" onclick="ssc_changeTab(this)">
+            <svg class="ssc_icon" aria-hidden="true">
+                <use xlink:href="#icon-yonghu"></use>
+                 
+            </svg>
+            <span>用户</span>
+        </div>
+        <div class="ssc_tab_item" onclick="ssc_changeTab(this)">
+            <svg class="ssc_icon" aria-hidden="true">
+                <use xlink:href="#icon-lishijilu"></use>
+                 
+            </svg>
+            <span>历史记录</span>
+        </div>
+    </div>
+        <script>
+            function ssc_changeTab(ssc_current) {
+                var ssc_tabItems = document.querySelectorAll('.ssc_tab_item');
+                for (var ssc_i = 0; ssc_i < ssc_tabItems.length; ssc_i++) {
+                    ssc_tabItems[ssc_i].classList.remove('ssc_active');
+                }
+                ssc_current.classList.add('ssc_active');
+            }
+        </script>
+</body>
+</html>

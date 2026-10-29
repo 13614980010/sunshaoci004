@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格布局grid</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .ssc_photo_box{
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        /* 作用与上行一样 */
+        /* grid-template-columns: 1fr 1fr 1fr; */
+            gap:10px 15px;
+    }
+    .ssc_photo{
+        min-height: 100px;
+        background-color: pink;
+        border: 1px solid red;
+        border-radius: 5px;
+        font-size:24px ;
+        color: blue;
+        text-align: center;
+        line-height: 100px;
+
+    }
+    .ssc_photo:nth-child(1){
+        grid-column: span 2;
+    }
+    .ssc_photo:nth-child(2){
+        grid-row: span 2;
+    }
+    </style>
+</head>
+<body>
+    <div class="ssc_photo_box">
+        <div class="ssc_photo">1</div>
+        <div class="ssc_photo">2</div>
+        <div class="ssc_photo">3</div>
+        <div class="ssc_photo">4</div>
+        <div class="ssc_photo">5</div>
+        <div class="ssc_photo">6</div>
+    </div>
+</body>
+</html>

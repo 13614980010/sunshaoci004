@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>移动端下导航 · SVG 图标</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f3f2ee;
+            color: #16161a;
+        }
+
+        /* ===== 移动端视口容器 ===== */
+        .ssc_phone {
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: #ffffff;
+            box-shadow: 0 0 40px rgba(0, 0, 0, .08);
+        }
+
+        /* ===== 页面内容 ===== */
+        .ssc_content {
+            flex: 1;
+            padding: 24px 20px 110px;
+            overflow-y: auto;
+        }
+        .ssc_content h2 {
+            font-family: Georgia, "Songti SC", "SimSun", serif;
+            font-weight: 500;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .ssc_content p {
+            color: #6e6e73;
+            font-size: .92rem;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+        .ssc_content code {
+            font-family: "Cascadia Mono", Consolas, monospace;
+            font-size: .85em;
+            background: #f3f2ee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #144b8a;
+        }
+        .ssc_place {
+            display: block;
+            margin-top: 18px;
+            padding: 14px 16px;
+            background: #faf9f5;
+            border: 1px solid #e2e0d8;
+            border-radius: 8px;
+            color: #6e6e73;
+            font-size: .88rem;
+        }
+
+        /* ===== 固定底部导航 ===== */
+        .ssc_tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #e2e0d8;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        .ssc_tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 10px 0 8px;
+            text-decoration: none;
+            color: #9a9aa0;
+            transition: color .25s;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ssc_tab svg {
+            width: 1.55rem;
+            height: 1.55rem;
+            transition: color .25s, transform .25s;
+        }
+        .ssc_tab span {
+            font-size: .68rem;
+            letter-spacing: .02em;
+        }
+        .ssc_tab.ssc_active {
+            color: #144b8a;
+        }
+        .ssc_tab.ssc_active svg {
+            color: #144b8a;
+            transform: translateY(-1px);
+        }
+
+        /* ===== 数字徽章（右上角） ===== */
+        .ssc_badge {
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            margin-left: 6px;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            background: #d64541;
+            color: #fff;
+            font-size: .62rem;
+            line-height: 16px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 0 0 2px #fff;
+            font-style: normal;
+        }
+        .ssc_badge.ssc_badge_max {
+            min-width: 18px;
+        }
+
+        /* ===== 红点（右上角） ===== */
+        .ssc_dot {
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            margin-left: 10px;
+            width: 8px;
+            height: 8px;
+            background: #d64541;
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        /* ===== 顶部页眉 ===== */
+        .ssc_status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            border-bottom: 1px solid #f0efe9;
+            font-size: .78rem;
+            color: #9a9aa0;
+        }
+        .ssc_status b { color: #16161a; font-weight: 600; }
+        .ssc_back {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: .8rem;
+            color: #144b8a;
+            text-decoration: none;
+        }
+        .ssc_back:hover { text-decoration: underline; }
+
+        @media (max-width: 420px) {
+            .ssc_tabbar { max-width: 100vw; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ssc_phone">
+        <div class="ssc_status">
+            <b>iconfont-4 · SVG 图标</b>
+            <a class="ssc_back" href="./index.html">返回首页</a>
+        </div>
+
+        <main class="ssc_content">
+            <h2>移动端固定底导航</h2>
+            <p>同样的固定底导航，图标改用 <strong>SVG 方式</strong>：引入本地 <code>iconfont.js</code> 注入 SVG symbol，通过 <code>&lt;svg&gt;&lt;use xlink:href="#icon-xxx"&gt;&lt;/use&gt;&lt;/svg&gt;</code> 引用矢量路径。</p>
+            <p>SVG 为矢量图形，放大不失真，颜色通过 <code>fill: currentColor</code> 继承。右上角装饰与字体版一致：消息项数字徽章、用户项红点。</p>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+            <span class="ssc_place">占位内容 · 用于演示滚动时导航仍固定于底部</span>
+        </main>
+
+        <nav class="ssc_tabbar" id="ssc_tabbar">
+            <a class="ssc_tab ssc_active" href="#" data-index="0">
+                <svg class="ssc_icon" aria-hidden="true"><use xlink:href="#icon-lishijilu"></use></svg>
+                <span>历史</span>
+            </a>
+            <a class="ssc_tab" href="#" data-index="1">
+                <svg class="ssc_icon" aria-hidden="true"><use xlink:href="#icon-xiaoxi"></use></svg>
+                <span>消息</span>
+                <em class="ssc_badge">8</em>
+            </a>
+            <a class="ssc_tab" href="#" data-index="2">
+                <svg class="ssc_icon" aria-hidden="true"><use xlink:href="#icon-yonghu"></use></svg>
+                <span>用户</span>
+                <em class="ssc_badge ssc_badge_max">99+</em>
+            </a>
+            <a class="ssc_tab" href="#" data-index="3">
+                <svg class="ssc_icon" aria-hidden="true"><use xlink:href="#icon-gexing"></use></svg>
+                <span>个性</span>
+                <em class="ssc_dot"></em>
+            </a>
+        </nav>
+    </div>
+
+    <!-- 本地 iconfont.js：注入 SVG symbol 定义 -->
+    <script src="./font_5238940_d3fxv615wg4/iconfont.js"></script>
+    <script>
+        var ssc_tabs = document.querySelectorAll('#ssc_tabbar .ssc_tab');
+        var ssc_onTab = function (ssc_event) {
+            ssc_event.preventDefault();
+            for (var ssc_i = 0; ssc_i < ssc_tabs.length; ssc_i++) {
+                ssc_tabs[ssc_i].classList.remove('ssc_active');
+            }
+            ssc_event.currentTarget.classList.add('ssc_active');
+        };
+        for (var ssc_j = 0; ssc_j < ssc_tabs.length; ssc_j++) {
+            ssc_tabs[ssc_j].addEventListener('click', ssc_onTab);
+        }
+    </script>
+</body>
+</html>

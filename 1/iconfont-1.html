@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字体图标 · Font Awesome</title>
+    <link rel="stylesheet" href="./cdn/fontawesome/css/all.min.css">
+    <style>
+        /* ===== 设计令牌 ===== */
+        :root {
+            --ssc_ink: #16161a;
+            --ssc_paper: #fbfbf7;
+            --ssc_line: #d9d7cd;
+            --ssc_muted: #6e6e73;
+            --ssc_accent: #144b8a;
+            --ssc_font_display: Georgia, "Songti SC", "SimSun", serif;
+            --ssc_font_body: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --ssc_font_code: "Cascadia Mono", Consolas, monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--ssc_paper);
+            color: var(--ssc_ink);
+            font-family: var(--ssc_font_body);
+            line-height: 1.7;
+        }
+        .ssc_page { max-width: 1080px; margin: 0 auto; padding: 0 28px 96px; }
+
+        /* ===== 顶部导航 ===== */
+        .ssc_nav { padding: 26px 0; border-bottom: 1px solid var(--ssc_line); }
+        .ssc_nav a {
+            color: var(--ssc_muted);
+            text-decoration: none;
+            font-size: .9rem;
+            transition: color .2s;
+        }
+        .ssc_nav a:hover { color: var(--ssc_accent); }
+
+        /* ===== Hero：文字即图形 ===== */
+        .ssc_hero {
+            display: grid;
+            grid-template-columns: 1.25fr .75fr;
+            gap: 56px;
+            align-items: center;
+            padding: 76px 0 60px;
+        }
+        .ssc_hero_copy h1 {
+            font-family: var(--ssc_font_display);
+            font-weight: 500;
+            font-size: clamp(2.6rem, 6vw, 4.8rem);
+            line-height: 1.08;
+            letter-spacing: -.01em;
+            margin-bottom: 22px;
+        }
+        .ssc_hero_copy p {
+            color: var(--ssc_muted);
+            max-width: 46ch;
+            font-size: 1.02rem;
+        }
+        .ssc_hero_copy code {
+            font-family: var(--ssc_font_code);
+            font-size: .85em;
+            background: transparent;
+            color: var(--ssc_accent);
+        }
+        .ssc_hero_glyph {
+            justify-self: end;
+            text-align: center;
+        }
+        .ssc_hero_glyph .ssc_ring {
+            width: 260px;
+            height: 260px;
+            border: 1px solid var(--ssc_line);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--ssc_accent);
+            animation: ssc_rise 1.1s cubic-bezier(.22,.61,.36,1) both;
+        }
+        .ssc_hero_glyph .ssc_ring i { font-size: 7.5rem; }
+        .ssc_hero_glyph .ssc_glyph_name {
+            margin-top: 14px;
+            font-family: var(--ssc_font_code);
+            font-size: .78rem;
+            color: var(--ssc_muted);
+        }
+
+        /* ===== 图标区 ===== */
+        .ssc_section { padding: 44px 0 8px; }
+        .ssc_section_head {
+            display: flex;
+            align-items: baseline;
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+        .ssc_section_head h2 {
+            font-family: var(--ssc_font_display);
+            font-weight: 500;
+            font-size: 1.7rem;
+        }
+        .ssc_section_head span {
+            color: var(--ssc_muted);
+            font-size: .88rem;
+        }
+        .ssc_grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            border-top: 1px solid var(--ssc_line);
+            border-left: 1px solid var(--ssc_line);
+        }
+        .ssc_item {
+            padding: 26px 14px 22px;
+            border-right: 1px solid var(--ssc_line);
+            border-bottom: 1px solid var(--ssc_line);
+            text-align: center;
+            background: transparent;
+            transition: background .25s;
+        }
+        .ssc_item i {
+            font-size: 2.1rem;
+            color: var(--ssc_ink);
+            display: block;
+            margin-bottom: 14px;
+            transition: color .25s, transform .25s;
+        }
+        .ssc_item:hover { background: #fff; }
+        .ssc_item:hover i { color: var(--ssc_accent); transform: translateY(-3px); }
+        .ssc_item .ssc_name {
+            font-family: var(--ssc_font_code);
+            font-size: .74rem;
+            color: var(--ssc_muted);
+            word-break: break-all;
+        }
+
+        /* ===== 变换演示 ===== */
+        .ssc_effects { display: flex; gap: 16px; flex-wrap: wrap; }
+        .ssc_effect {
+            flex: 1 1 160px;
+            padding: 26px 16px;
+            border: 1px solid var(--ssc_line);
+            text-align: center;
+        }
+        .ssc_effect i {
+            display: block;
+            font-size: 2.3rem;
+            color: var(--ssc_ink);
+            margin-bottom: 12px;
+        }
+        .ssc_effect .ssc_name {
+            font-family: var(--ssc_font_code);
+            font-size: .74rem;
+            color: var(--ssc_muted);
+        }
+
+        /* ===== 页脚 ===== */
+        .ssc_foot {
+            margin-top: 72px;
+            padding-top: 24px;
+            border-top: 1px solid var(--ssc_line);
+            color: var(--ssc_muted);
+            font-size: .84rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== 动效：单一编排时刻 ===== */
+        @keyframes ssc_rise {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ssc_hero_glyph .ssc_ring { animation: none; }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 720px) {
+            .ssc_hero { grid-template-columns: 1fr; gap: 40px; padding: 52px 0 44px; }
+            .ssc_hero_glyph { justify-self: start; }
+            .ssc_hero_glyph .ssc_ring { width: 190px; height: 190px; }
+            .ssc_hero_glyph .ssc_ring i { font-size: 5.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ssc_page">
+        <nav class="ssc_nav">
+            <a href="./index.html">← 返回课堂首页</a>
+        </nav>
+
+        <header class="ssc_hero">
+            <div class="ssc_hero_copy">
+                <h1>文字即图形</h1>
+                <p>Font Awesome 以字体承载图标：用 <code>&lt;i class="fa-solid fa-star"&gt;&lt;/i&gt;</code> 写下字形，就能像调整文字一样调整它的颜色、大小与节奏。</p>
+            </div>
+            <div class="ssc_hero_glyph">
+                <div class="ssc_ring" aria-hidden="true"><i class="fa-solid fa-star"></i></div>
+                <div class="ssc_glyph_name">fa-solid fa-star</div>
+            </div>
+        </header>
+
+        <main>
+            <section class="ssc_section">
+                <div class="ssc_section_head">
+                    <h2>实心图标</h2>
+                    <span>fa-solid · 最常用的字重</span>
+                </div>
+                <div class="ssc_grid">
+                    <div class="ssc_item"><i class="fa-solid fa-house"></i><span class="ssc_name">fa-house</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-user"></i><span class="ssc_name">fa-user</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-heart"></i><span class="ssc_name">fa-heart</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-star"></i><span class="ssc_name">fa-star</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-envelope"></i><span class="ssc_name">fa-envelope</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-cloud"></i><span class="ssc_name">fa-cloud</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-gear"></i><span class="ssc_name">fa-gear</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-magnifying-glass"></i><span class="ssc_name">fa-magnifying-glass</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-trash"></i><span class="ssc_name">fa-trash</span></div>
+                    <div class="ssc_item"><i class="fa-solid fa-pen"></i><span class="ssc_name">fa-pen</span></div>
+                </div>
+            </section>
+
+            <section class="ssc_section">
+                <div class="ssc_section_head">
+                    <h2>品牌图标</h2>
+                    <span>fa-brands · 各品牌的专属字形</span>
+                </div>
+                <div class="ssc_grid">
+                    <div class="ssc_item"><i class="fa-brands fa-github"></i><span class="ssc_name">fa-github</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-html5"></i><span class="ssc_name">fa-html5</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-css3-alt"></i><span class="ssc_name">fa-css3-alt</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-js"></i><span class="ssc_name">fa-js</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-weixin"></i><span class="ssc_name">fa-weixin</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-qq"></i><span class="ssc_name">fa-qq</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-chrome"></i><span class="ssc_name">fa-chrome</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-apple"></i><span class="ssc_name">fa-apple</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-windows"></i><span class="ssc_name">fa-windows</span></div>
+                    <div class="ssc_item"><i class="fa-brands fa-android"></i><span class="ssc_name">fa-android</span></div>
+                </div>
+            </section>
+
+            <section class="ssc_section">
+                <div class="ssc_section_head">
+                    <h2>常规图标</h2>
+                    <span>fa-regular · 细线描边的轻盈字重</span>
+                </div>
+                <div class="ssc_grid">
+                    <div class="ssc_item"><i class="fa-regular fa-heart"></i><span class="ssc_name">fa-heart</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-star"></i><span class="ssc_name">fa-star</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-envelope"></i><span class="ssc_name">fa-envelope</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-user"></i><span class="ssc_name">fa-user</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-calendar"></i><span class="ssc_name">fa-calendar</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-clock"></i><span class="ssc_name">fa-clock</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-bell"></i><span class="ssc_name">fa-bell</span></div>
+                    <div class="ssc_item"><i class="fa-regular fa-circle-check"></i><span class="ssc_name">fa-circle-check</span></div>
+                </div>
+            </section>
+
+            <section class="ssc_section">
+                <div class="ssc_section_head">
+                    <h2>文字的特性</h2>
+                    <span>作为文字，图标可以着色、缩放与律动</span>
+                </div>
+                <div class="ssc_effects">
+                    <div class="ssc_effect"><i class="fa-solid fa-house" style="color: #b23a2e;"></i><span class="ssc_name">改颜色</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-house" style="font-size: 3.1rem;"></i><span class="ssc_name">放大字重</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-arrow-right fa-rotate-90"></i><span class="ssc_name">旋转 90°</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-arrow-right fa-rotate-180"></i><span class="ssc_name">旋转 180°</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-car fa-beat"></i><span class="ssc_name">fa-beat 律动</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-heart fa-fade"></i><span class="ssc_name">fa-fade 呼吸</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-music fa-spin"></i><span class="ssc_name">fa-spin 旋转</span></div>
+                    <div class="ssc_effect"><i class="fa-solid fa-bell fa-shake"></i><span class="ssc_name">fa-shake 抖动</span></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="ssc_foot">
+            <span>孙绍词 · 高级网页设计课堂实践</span>
+            <span>字体图标 · Font Awesome 6.5</span>
+        </footer>
+    </div>
+</body>
+</html>

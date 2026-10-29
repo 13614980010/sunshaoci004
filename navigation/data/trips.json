@@ -1,0 +1,5 @@
+[
+  {"id":1,"status":"upcoming","day":"28","date":"今天 · 周一","start":"14:30 · 出发地","from":"湖滨银泰 A 区","arrival":"约 18 分钟后","to":"天目里艺术空间","label":"即将出发"},
+  {"id":2,"status":"past","day":"26","date":"周六 · 9 月","start":"09:20 · 出发地","from":"武林广场","arrival":"10:05 · 到达","to":"灵隐寺","label":"已完成"},
+  {"id":3,"status":"past","day":"21","date":"周一 · 9 月","start":"16:10 · 出发地","from":"龙翔桥地铁站","arrival":"16:42 · 到达","to":"小河直街历史街区","label":"已完成"}
+]

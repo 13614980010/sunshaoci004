@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="孙绍词的高级网页设计课堂实践目录">
+    <title>高级网页设计 | 孙绍词的课堂实践</title>
+    <style>
+        :root {
+            --ink: #1e293b;
+            --muted: #64748b;
+            --paper: #eef4f3;
+            --card: #ffffff;
+            --line: #cbdedb;
+            --accent: #d66a45;
+            --accent-dark: #a9432d;
+            --teal: #18756f;
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+            line-height: 1.7;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            opacity: .45;
+            background-image: linear-gradient(rgba(24,117,111,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(24,117,111,.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+        .ssc_page { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+        .ssc_topbar { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; color: var(--muted); font-size: .9rem; }
+        .ssc_mark { color: var(--ink); font-weight: 800; letter-spacing: .08em; }
+        a { color: var(--teal); font-weight: 800; text-decoration: none; }
+        .ssc_topbar a { color: var(--ink); border-bottom: 1px solid var(--accent); }
+        .ssc_hero { display: grid; grid-template-columns: 1.3fr .7fr; gap: 42px; align-items: end; padding: 72px 0 92px; }
+        .ssc_eyebrow { margin: 0 0 18px; color: var(--accent-dark); font-size: .8rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+        h1, h2, h3, p { margin-top: 0; }
+        h1 { max-width: 750px; margin-bottom: 24px; font-family: Georgia, "Songti SC", serif; font-size: clamp(3rem, 8vw, 6.8rem); line-height: .98; letter-spacing: -.04em; font-weight: 500; }
+        .ssc_hero_copy { max-width: 600px; color: var(--muted); font-size: 1.08rem; }
+        .ssc_hero_stamp { justify-self: end; width: 210px; height: 210px; display: grid; place-items: center; border: 1px solid var(--accent); border-radius: 50%; color: var(--accent-dark); text-align: center; transform: rotate(8deg); }
+        .ssc_hero_stamp strong { display: block; font-family: Georgia, "Songti SC", serif; font-size: 3.5rem; line-height: 1; }
+        .ssc_section_head { display: flex; justify-content: space-between; align-items: end; gap: 20px; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+        .ssc_section_head h2, .ssc_brief h2 { margin-bottom: 0; font-family: Georgia, "Songti SC", serif; font-size: 2.25rem; font-weight: 500; }
+        .ssc_section_head p { margin-bottom: 0; color: var(--muted); }
+        .ssc_modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 30px 0 96px; }
+        .ssc_module { min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; padding: 26px; background: var(--card); border: 1px solid var(--line); box-shadow: 5px 5px 0 rgba(24,117,111,.12); transition: transform .2s ease, box-shadow .2s ease; }
+        .ssc_module:hover { transform: translateY(-5px); box-shadow: 8px 11px 0 rgba(24,117,111,.2); }
+        .ssc_module.ssc_future { background: rgba(255,255,255,.25); border-style: dashed; box-shadow: none; }
+        .ssc_module_no { color: var(--accent); font-family: Georgia, serif; font-size: 1.2rem; }
+        .ssc_module h3 { margin: 24px 0 8px; font-size: 1.35rem; }
+        .ssc_module p { color: var(--muted); font-size: .95rem; }
+        .ssc_module_link::after { content: "  ↗"; }
+        .ssc_module_status { color: var(--muted); font-size: .82rem; }
+        .ssc_brief { display: grid; grid-template-columns: .8fr 1.2fr; gap: 42px; padding: 28px 0 76px; border-top: 1px solid var(--line); }
+        .ssc_brief h2 { margin-bottom: 8px; }
+        .ssc_prompt { padding: 24px; background: #203d43; color: #eef4f3; border-left: 5px solid var(--accent); white-space: pre-wrap; font-family: Consolas, monospace; font-size: .9rem; }
+        footer { display: flex; justify-content: space-between; gap: 20px; padding: 22px 0 34px; color: var(--muted); border-top: 1px solid var(--line); font-size: .85rem; }
+        @media (max-width: 720px) {
+            .ssc_page { width: min(100% - 28px, 540px); }
+            .ssc_topbar { padding: 18px 0; }
+            .ssc_hero { grid-template-columns: 1fr; padding: 48px 0 64px; gap: 34px; }
+            h1 { font-size: clamp(3rem, 18vw, 5rem); }
+            .ssc_hero_stamp { justify-self: start; width: 150px; height: 150px; }
+            .ssc_hero_stamp strong { font-size: 2.5rem; }
+            .ssc_modules, .ssc_brief { grid-template-columns: 1fr; padding-bottom: 64px; }
+            .ssc_section_head, footer { align-items: start; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ssc_page">
+        <header class="ssc_topbar">
+            <span class="ssc_mark">SSC / WEB DESIGN</span>
+            <a href="#ssc_catalog">进入课堂目录 ↓</a>
+        </header>
+
+        <main>
+            <section class="ssc_hero" aria-labelledby="ssc_page_title">
+                <div>
+                    <p class="ssc_eyebrow">Advanced Web Design · Class Practice</p>
+                    <h1 id="ssc_page_title">高级网页设计<br>课堂实践</h1>
+                    <p class="ssc_hero_copy">孙绍词的网页设计学习档案。这里记录从 HTML 结构、页面语义到交互实践的每一步，持续增加中。</p>
+                </div>
+                <div class="ssc_hero_stamp" aria-label="课程实践标记"><div><strong>01</strong>COURSE<br>ARCHIVE</div></div>
+            </section>
+
+            <section id="ssc_catalog" aria-labelledby="ssc_catalog_title">
+                <div class="ssc_section_head">
+                    <h2 id="ssc_catalog_title">课堂目录</h2>
+                    <p>已收录 06 个页面 · 计划持续更新</p>
+                </div>
+                <div class="ssc_modules">
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">01 / 基础</span><h3>HTML 基础</h3><p>标题、段落、列表、表格、超链接、图片和块级元素的基础练习。</p></div>
+                        <a class="ssc_module_link" href="./Untitled-1.html">查看练习</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">02 / 页面</span><h3>自我介绍网页</h3><p>使用语义化标签组织个人信息，练习页面内容与结构的表达。</p></div>
+                        <a class="ssc_module_link" href="./self.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">03 / 表格</span><h3>基础表格</h3><p>练习表格的行、列、表头和单元格结构，整理网页中的信息内容。</p></div>
+                        <a class="ssc_module_link" href="./form.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">04 / CSS</span><h3>层叠与继承＋盒模型</h3><p>理解 CSS 层叠、继承、边框、内边距和外边距，掌握元素空间关系。</p></div>
+                        <a class="ssc_module_link" href="./stack.html">查看练习</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">05 / 图文</span><h3>上图下文</h3><p>使用图片、链接和 Flex 布局制作图文结合的课堂练习页面。</p></div>
+                        <a class="ssc_module_link" href="./pic_above_text.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">06 / 归档</span><h3>课堂实践总览</h3><p>返回课堂实践首页，后续新增的课程模块也会继续收录在这里。</p></div>
+                        <a class="ssc_module_link" href="./index.html">当前首页</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">07 / 页面</span><h3>网页整体布局</h3><p>练习使用 CSS 布局技术，创建响应式和美观的网页布局。</p></div>
+                        <a class="ssc_module_link" href="./layout.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">08 / 页面</span><h3>SVG 图标</h3><p>练习使用 SVG 技术创建矢量图形，增强网页的视觉效果。</p></div>
+                        <a class="ssc_module_link" href="./svg.html">查看页面</a>
+                    </article>
+                     <article class="ssc_module">
+                        <div><span class="ssc_module_no">09 / 基础</span><h3>CSS3 基础</h3><p>学习 CSS3 的新特性，如动画、过渡和变形。</p></div>
+                        <a class="ssc_module_link" href="./css3.html">查看练习</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">10 / 图标</span><h3>Font Awesome 字体图标</h3><p>使用本地字体图标库，通过字体方式展示 Font Awesome 图标。</p></div>
+                        <a class="ssc_module_link" href="./iconfont-1.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">11 / 图标</span><h3>Lucide SVG 图标</h3><p>使用本地 Lucide 库，通过 SVG 方式展示矢量图标。</p></div>
+                        <a class="ssc_module_link" href="./iconfont-2.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">12 / 导航</span><h3>移动端固定底导航 · 字体图标</h3><p>自适应宽度的移动端底部导航，4 个 iconfont 字体图标，含数字徽章与红点。</p></div>
+                        <a class="ssc_module_link" href="./iconfont-3.html">查看页面</a>
+                    </article>
+                    <article class="ssc_module">
+                        <div><span class="ssc_module_no">13 / 导航</span><h3>移动端固定底导航 · SVG 图标</h3><p>同样的固定底导航，改用 SVG 方式渲染 iconfont 图标。</p></div>
+                        <a class="ssc_module_link" href="./iconfont-4.html">查看页面</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="ssc_brief" aria-labelledby="ssc_brief_title">
+                <div><h2 id="ssc_brief_title">本页任务</h2><p>把每次课堂实践整理成清晰、可访问、可以继续生长的网页档案。</p></div>
+                <div class="ssc_prompt">本提示词：创建一个新页面，包括本目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为孙绍词的《高级网页设计》课堂实践，美化页面，课堂目录中包含HTML基础、自我介绍网页、基础表格、层叠与继承＋盒模型、上图下文等其余模块后续在增加。页面中包括本提示词。</div>
+            </section>
+        </main>
+
+        <footer><span>孙绍词 · 高级网页设计</span><span>© 2026 / Learning in public</span></footer>
+    </div>
+</body>
+</html>

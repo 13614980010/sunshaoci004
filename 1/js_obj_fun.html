@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        //Math
+        console.log(Math.floor(1.9)); //向下取整
+        console.log(Math.round(1.9)); //四舍五入
+        console.log(Math.floor(Math.random() * 101)); //随机数[0，100] 
+        //随机数[min,max]整数 Math.floor(Math.random() * (max - min + 1)) + min
+        function ssc_randomNum(ssc_min, ssc_max) {
+            return Math.floor(Math.random() * (ssc_max - ssc_min + 1)) + ssc_min;
+        }
+        //Data对象
+        var ssc_date = new Date();
+        console.log(ssc_date.getFullYear()); //获取年份
+        console.log(ssc_date.getMonth() + 1); //获取月份
+        console.log(ssc_date.getDate()); //获取日期
+        console.log(ssc_date.getHours()); //获取小时
+        console.log(ssc_date.getMinutes()); //获取分钟
+        console.log(ssc_date.getSeconds()); //获取秒
+        console.log(ssc_date.getDay()); //获取星期
+        console.log(ssc_date.getTime()); //获取时间戳 1970-1-1 00:00:00 到现在的毫秒数
+        //数组
+        var ssc_arr = [1, 2, 3, 4, 5,'seven', 'eight', 'nine', 'ten'];
+        var ssc_arr2 = new Array(1, 2, 3, 4, 5,'six', 'seven', 'eight', 'nine', 'ten');
+        var ssc_arr3 = new Array(10); //创建一个长度为10的数组
+        console.log(ssc_arr.length); //获取数组长度
+    </script>
+</body>
+</html>
