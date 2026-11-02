@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-02
+  使用模型：GLM-5.3-Flash
+  功能名称：热播剧集排行榜 Tab 选项卡页面（tab.html）
+  作者学号：24001010806（姓名拼音缩写 ssc，页面页头可见展示）
+  功能简介：还原经典剧集排行榜组件——每日、每周、每月、全部四个
+            选项卡，每日为默认选中项；榜单两列布局共 10 行，
+            第 1-3 名红色序号徽章、第 4-10 名灰色徽章。
+            榜单数据直接写在 HTML 中，不引用任何图片；
+            JS 外置于 js 文件夹外部引用（js/ssc_tab.js），
+            通过事件监听实现"先清除所有选中状态、再设置当前选中状态"。
+-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热播剧集排行 · Tab 选项卡 · 24001010806 孙绍词</title>
+    <style>
+        /* ===== 全局 CSS：通配符重置 ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background: #f3f2ee;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+        a { color: #144b8a; }
+
+        /* ===== 页面容器 ===== */
+        .ssc_page {
+            width: 100%;
+            max-width: 440px;
+        }
+        .ssc_header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+        .ssc_header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .ssc_header a {
+            font-size: .85rem;
+            text-decoration: none;
+        }
+        .ssc_header a:hover { text-decoration: underline; }
+
+        /* ===== 个人信息标识（学号 + 姓名拼音缩写） ===== */
+        .ssc_student {
+            margin: -8px 0 14px;
+            font-size: .82rem;
+            color: #6e6e73;
+            letter-spacing: .02em;
+        }
+        .ssc_student b {
+            color: #d64541;
+            font-weight: 600;
+        }
+
+        /* ===== 选项卡按钮行：灰底，选中项白底红字 ===== */
+        .ssc_tabs {
+            display: flex;
+            gap: 2px;
+            list-style: none;
+        }
+        .ssc_tab {
+            flex: 1;
+            padding: 10px 0;
+            border: 1px solid #d9d9d9;
+            border-bottom: none;
+            background: #e0e0e0;
+            color: #555;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ssc_tab:hover { color: #d64541; }
+        /* 选中态：白底 + 红字 + 加粗 */
+        .ssc_tab.ssc_active {
+            background: #ffffff;
+            color: #d64541;
+            font-weight: 600;
+        }
+
+        /* ===== 榜单面板：两列 × 5 行 ===== */
+        .ssc_panel { display: none; }
+        .ssc_panel.ssc_show { display: block; }
+        .ssc_panel ul {
+            list-style: none;
+            background: #ffffff;
+            border: 1px solid #d9d9d9;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .ssc_panel li {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 14px;
+            border-bottom: 1px dotted #e8e8e8;
+            font-size: .86rem;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .ssc_panel li:nth-last-child(-n+2) { border-bottom: none; }
+
+        /* ===== 名次徽章：1-3 红色，4-10 灰色 ===== */
+        .ssc_rank {
+            flex-shrink: 0;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 3px;
+            line-height: 19px;
+            text-align: center;
+            background: #b5b5b5;
+            color: #fff;
+            font-style: normal;
+            font-size: .72rem;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+        .ssc_rank.ssc_rank_top { background: #e0483e; }
+        .ssc_name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ssc_note {
+            margin-top: 14px;
+            font-size: .8rem;
+            color: #9a9aa0;
+            line-height: 1.7;
+        }
+        .ssc_note code {
+            font-family: Consolas, monospace;
+            background: #faf9f5;
+            border: 1px solid #e2e0d8;
+            border-radius: 4px;
+            padding: 1px 6px;
+            color: #144b8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="ssc_page">
+        <!-- 页头：标题 + 返回首页链接 + 个人信息标识 -->
+        <header class="ssc_header">
+            <h1>热播剧集排行</h1>
+            <a href="../index.html">返回首页</a>
+        </header>
+        <p class="ssc_student">制作人：<b>24001010806ssc</b>（学号 + 姓名拼音缩写）· 孙绍词</p>
+
+        <!-- 选项卡按钮：每日为默认选中 -->
+        <ul class="ssc_tabs" role="tablist" aria-label="排行周期">
+            <li><button type="button" class="ssc_tab ssc_active" role="tab">每日</button></li>
+            <li><button type="button" class="ssc_tab" role="tab">每周</button></li>
+            <li><button type="button" class="ssc_tab" role="tab">每月</button></li>
+            <li><button type="button" class="ssc_tab" role="tab">全部</button></li>
+        </ul>
+
+        <!-- 榜单面板：顺序与按钮一一对应，两列各 5 行，1-3 名红色徽章 -->
+        <div class="ssc_panels">
+            <div class="ssc_panel ssc_show" role="tabpanel">
+                <ul>
+                    <li><em class="ssc_rank ssc_rank_top">1</em><span class="ssc_name">最美的时光</span></li>
+                    <li><em class="ssc_rank">6</em><span class="ssc_name">极品女士第2季</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">2</em><span class="ssc_name">咱们结婚吧</span></li>
+                    <li><em class="ssc_rank">7</em><span class="ssc_name">爱闪亮</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">3</em><span class="ssc_name">渗透</span></li>
+                    <li><em class="ssc_rank">8</em><span class="ssc_name">狼烟（2013）</span></li>
+                    <li><em class="ssc_rank">4</em><span class="ssc_name">继承者们</span></li>
+                    <li><em class="ssc_rank">9</em><span class="ssc_name">钱多多炼爱记</span></li>
+                    <li><em class="ssc_rank">5</em><span class="ssc_name">烽火佳人</span></li>
+                    <li><em class="ssc_rank">10</em><span class="ssc_name">苍狼</span></li>
+                </ul>
+            </div>
+            <div class="ssc_panel" role="tabpanel">
+                <ul>
+                    <li><em class="ssc_rank ssc_rank_top">1</em><span class="ssc_name">咱们结婚吧</span></li>
+                    <li><em class="ssc_rank">6</em><span class="ssc_name">狼烟（2013）</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">2</em><span class="ssc_name">继承者们</span></li>
+                    <li><em class="ssc_rank">7</em><span class="ssc_name">三十岁，你好</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">3</em><span class="ssc_name">最美的时光</span></li>
+                    <li><em class="ssc_rank">8</em><span class="ssc_name">钱多多炼爱记</span></li>
+                    <li><em class="ssc_rank">4</em><span class="ssc_name">爱闪亮</span></li>
+                    <li><em class="ssc_rank">9</em><span class="ssc_name">特种兵之火凤凰</span></li>
+                    <li><em class="ssc_rank">5</em><span class="ssc_name">渗透</span></li>
+                    <li><em class="ssc_rank">10</em><span class="ssc_name">极品女士第2季</span></li>
+                </ul>
+            </div>
+            <div class="ssc_panel" role="tabpanel">
+                <ul>
+                    <li><em class="ssc_rank ssc_rank_top">1</em><span class="ssc_name">特种兵之火凤凰</span></li>
+                    <li><em class="ssc_rank">6</em><span class="ssc_name">爱闪亮</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">2</em><span class="ssc_name">咱们结婚吧</span></li>
+                    <li><em class="ssc_rank">7</em><span class="ssc_name">爱情面前谁怕谁</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">3</em><span class="ssc_name">继承者们</span></li>
+                    <li><em class="ssc_rank">8</em><span class="ssc_name">英雄联盟</span></li>
+                    <li><em class="ssc_rank">4</em><span class="ssc_name">金玉满堂</span></li>
+                    <li><em class="ssc_rank">9</em><span class="ssc_name">小爸爸</span></li>
+                    <li><em class="ssc_rank">5</em><span class="ssc_name">王的女人</span></li>
+                    <li><em class="ssc_rank">10</em><span class="ssc_name">我们这拨人</span></li>
+                </ul>
+            </div>
+            <div class="ssc_panel" role="tabpanel">
+                <ul>
+                    <li><em class="ssc_rank ssc_rank_top">1</em><span class="ssc_name">永不磨灭的番号</span></li>
+                    <li><em class="ssc_rank">6</em><span class="ssc_name">心术</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">2</em><span class="ssc_name">特种兵之火凤凰</span></li>
+                    <li><em class="ssc_rank">7</em><span class="ssc_name">乡村爱情5</span></li>
+                    <li><em class="ssc_rank ssc_rank_top">3</em><span class="ssc_name">新还珠格格</span></li>
+                    <li><em class="ssc_rank">8</em><span class="ssc_name">天天有喜</span></li>
+                    <li><em class="ssc_rank">4</em><span class="ssc_name">咱们结婚吧</span></li>
+                    <li><em class="ssc_rank">9</em><span class="ssc_name">一不小心爱上你</span></li>
+                    <li><em class="ssc_rank">5</em><span class="ssc_name">小爸爸</span></li>
+                    <li><em class="ssc_rank">10</em><span class="ssc_name">夏日甜心</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="ssc_note">实现说明：榜单为纯 HTML/CSS 还原（序号徽章由 <code>.ssc_rank</code> 样式绘制，未引用任何图片）；选项卡脚本外置于 <code>js/ssc_tab.js</code>，通过 <code>ssc_initTabs()</code> 初始化，事件监听中先清除所有选项卡的选中状态，再设置当前元素的选中状态。</p>
+    </div>
+
+    <!-- 外部引用可复用选项卡脚本 -->
+    <script src="./js/ssc_tab.js"></script>
+    <script>
+        /*
+          作者：孙绍词
+          建立时间：2026-11-02
+          使用模型：GLM-5.3-Flash
+          功能名称：本页排行榜选项卡初始化
+          功能简介：调用可复用函数 ssc_initTabs，为每日/每周/每月/全部
+                    选项卡绑定点击事件监听并完成默认选中（每日）
+        */
+        /* 个人信息：学号 + 姓名拼音缩写（与页头展示一致） */
+        var ssc_student_id = '24001010806ssc';
+        console.log('制作人：' + ssc_student_id + '（孙绍词）');
+        ssc_initTabs({
+            root: 'body',
+            tabSelector: '.ssc_tab',
+            panelSelector: '.ssc_panel',
+            activeClass: 'ssc_active',
+            showClass: 'ssc_show'
+        });
+    </script>
+</body>
+</html>
