@@ -210,9 +210,11 @@
       <button data-fx="coverflow">coverflow 画廊堆叠（沉浸）</button>
       <button data-fx="flip">flip 翻页（复古）</button>
       <button data-fx="cards">cards 卡片（俏皮）</button>
+      <button data-fx="creative">creative 电影墙（课堂未讲·自学）</button>
     </div>
     <div class="wy-demo">
       <span class="wy-demo-tag">🎛️ 演示四 · 效果实验台（点按钮切换 effect）</span>
+      <span class="wy-demo-tag">⌨️ 超纲加分：点一下轮播后按 ← / → 键切换（keyboard 键盘控制）</span>
       <div class="wy-swiper">
         <div class="swiper" id="wySw4">
           <div class="swiper-wrapper">
@@ -221,6 +223,7 @@
             <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>企业官网爱用 fade</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>游戏网站爱用 cube</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>相册页面爱用 coverflow</p></div></div>
+            <div class="swiper-slide"><img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=large%20luxury%20cruise%20ship%20docked%20at%20Shanghai%20cruise%20terminal%2C%20white%20hull%20with%20blue%20and%20red%20decorative%20stripes%2C%20art%20painting%20on%20the%20bow%2C%20clear%20blue%20sky%2C%20sunny%20day%2C%20wide%20angle%2C%20cinematic%20photography%2C%20ultra%20detailed&image_size=landscape_16_9" alt="爱达·魔都号邮轮"><div class="wy-cap"><h3>爱达·魔都号</h3><p>首艘国产大型邮轮 · 2024 年 1 月商业首航</p></div></div>
           </div>
           <div class="swiper-pagination" id="wyPag4"></div>
         </div>
@@ -228,7 +231,7 @@
     </div>
   </div>
 
-  <div class="wy-back"><a href="index.html">← 返回课堂实践中心</a>　<a href="swiper-lesson.html">查看教师讲解版 →</a></div>
+  <div class="wy-back"><a href="index.html">← 返回课堂实践中心</a>　<a href="swiper-lesson.html">查看教师讲解版 →</a>　<a href="swiper-task-ai-log.md">📝 提示词与 AI 对话记录</a></div>
 
   <footer>Swiper 课堂操作任务 · 大国重器光影展（学生版） · 高级网页设计 · 2026-2027-1</footer>
 </div>
@@ -273,22 +276,57 @@
     });
 
   // ── 任务 4：初始化 #wySw4，循环 + 3.2 秒自动播放 + 圆点 + 初始 effect ──
-  var wySw4 = new Swiper('#wySw4', {
-    loop: true,
-    speed: 800,
-    effect: 'slide',
-    autoplay: {
-      delay: 3200,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: '#wyPag4',
-      clickable: true,
-    },
-  });
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-08
+   * 使用模型：DeepSeek-V4.1-Flash
+   * 函数名称：ssc_fxOptions
+   * 功能简介：按传入的 effect 名生成演示四的完整 Swiper 配置对象。
+   *           creative（课堂未讲的第 7 种效果）额外挂载 creativeEffect：
+   *           prev 缩小左移并带角度、next 放大右移进场，模拟电影选片墙；
+   *           keyboard 为超纲加分项，支持方向键切换。
+   */
+  var ssc_fxOptions = function (ssc_effect) {
+    var ssc_opt = {
+      loop: true,
+      speed: 800,
+      effect: ssc_effect,
+      autoplay: {
+        delay: 3200,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '#wyPag4',
+        clickable: true,
+      },
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true,
+      },
+    };
+    if (ssc_effect === 'creative') {
+      ssc_opt.creativeEffect = {
+        prev: {
+          shadow: true,
+          translate: ['-55%', 0, -320],
+          rotate: [0, 0, -8],
+          scale: 0.8,
+        },
+        next: {
+          shadow: true,
+          translate: ['60%', 0, -200],
+          rotate: [0, 0, 8],
+          scale: 1.1,
+        },
+      };
+    }
+    return ssc_opt;
+  };
+
+  var wySw4 = new Swiper('#wySw4', ssc_fxOptions('slide'));
 
 
-  // ── 任务 4 进阶：补全按钮点击事件，实现六种效果实时切换 ──
+  // ── 任务 4 进阶：补全按钮点击事件，实现效果实时切换（含第 7 种 creative）──
   // 提示 1：动态换 effect 只改参数是无效的，必须销毁旧实例再重建（destroy + new）
   // 提示 2：按钮上已有 data-fx 属性，用 btn.dataset.fx 读取要切换的效果名
   document.querySelectorAll('.wy-fx button').forEach(function(btn){
@@ -301,19 +339,7 @@
       wySw4.destroy(true, true);
 
       // TODO 3：用新 effect 重建实例（把其它配置原样保留）
-      wySw4 = new Swiper('#wySw4', {
-        loop: true,
-        speed: 800,
-        effect: btn.dataset.fx,
-        autoplay: {
-          delay: 3200,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '#wyPag4',
-          clickable: true,
-        },
-      });
+      wySw4 = new Swiper('#wySw4', ssc_fxOptions(btn.dataset.fx));
     });
   });
 </script>
