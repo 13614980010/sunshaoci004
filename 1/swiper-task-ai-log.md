@@ -3,7 +3,8 @@
 - 作者：孙绍词
 - 建立时间：2026-11-08
 - 使用模型：DeepSeek-V4.1-Flash
-- 对应页面：[swiper-task.html](./swiper-task.html)（演示四 `#wySw4`）
+- 在线页面（可直接查看成果）：https://13614980010.github.io/sunshaoci004/1/swiper-task.html
+- 仓库源码：[1/swiper-task.html](https://github.com/13614980010/sunshaoci004/blob/main/1/swiper-task.html)（演示四 `#wySw4`）
 - 验证截图：[task1-cube.png](./verify/task1-cube.png)、[task2-creative.png](./verify/task2-creative.png)
 
 ---
@@ -96,7 +97,7 @@ new Swiper('#wySw4', {
 
 `prev` 控制已经翻过去、位于左侧的那张；`next` 控制还没进来、位于右侧的那张；当前 slide 本身始终是 identity（不位移、不旋转），所以三张的变换是分开配置的。
 
-### 最终实现（[swiper-task.html](./swiper-task.html) 中 `ssc_fxOptions` 的 creative 分支）
+### 最终实现（[swiper-task.html](https://13614980010.github.io/sunshaoci004/1/swiper-task.html) 中 `ssc_fxOptions` 的 creative 分支）
 
 ```js
 if (ssc_effect === 'creative') {
