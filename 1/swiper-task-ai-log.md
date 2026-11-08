@@ -4,6 +4,7 @@
 - 建立时间：2026-11-08
 - 使用模型：DeepSeek-V4.1-Flash
 - 在线页面（可直接查看成果）：https://13614980010.github.io/sunshaoci004/1/swiper-task.html
+- 记录页（网页版）：https://13614980010.github.io/sunshaoci004/1/swiper-task-ai-log.html
 - 仓库源码：[1/swiper-task.html](https://github.com/13614980010/sunshaoci004/blob/main/1/swiper-task.html)（演示四 `#wySw4`）
 - 验证截图：[task1-cube.png](./verify/task1-cube.png)、[task2-creative.png](./verify/task2-creative.png)
 

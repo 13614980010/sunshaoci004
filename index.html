@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-08
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：学习成果入口页（GitHub Pages 站点首页）
+  功能简介：作为线上站点根地址的落地页，集中列出本次 Swiper 课堂任务的
+            成果页面、提示词与 AI 对话记录，以及课堂实践目录的入口，
+            保证任何人打开站点首页都能直接看到可运行的成果。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孙绍词 · 高级网页设计 · 学习成果</title>
+<style>
+  .ssc_home_body{margin:0;min-height:100vh;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#1f2937;background:#f6f8fc}
+  .ssc_home_wrap{max-width:1000px;margin:0 auto;padding:48px 20px 64px}
+  .ssc_home_head{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);border-radius:22px;padding:40px 38px;color:#fff;box-shadow:0 14px 34px rgba(15,43,91,.3)}
+  .ssc_home_head .ssc_home_badge{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:13px;letter-spacing:2px}
+  .ssc_home_head h1{margin:16px 0 12px;font-size:34px;line-height:1.35}
+  .ssc_home_head h1 b{color:#ffd166}
+  .ssc_home_head p{margin:0;font-size:14.5px;color:#d9e3f5}
+  .ssc_home_grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:26px}
+  .ssc_home_card{display:flex;flex-direction:column;justify-content:space-between;min-height:200px;padding:26px;background:#fff;border:1px solid #e8ecf5;border-radius:18px;box-shadow:0 6px 16px rgba(31,41,55,.07);text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s}
+  .ssc_home_card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(15,43,91,.16)}
+  .ssc_home_no{color:#e8890c;font-weight:bold;font-size:13px;letter-spacing:1px}
+  .ssc_home_card h2{margin:12px 0 8px;font-size:20px;color:#0f2b5b}
+  .ssc_home_card p{margin:0;font-size:13.8px;color:#64748b;line-height:1.9}
+  .ssc_home_more{margin-top:16px;color:#1d5bbf;font-weight:bold;font-size:13.5px}
+  .ssc_home_more::after{content:"  ↗"}
+  .ssc_home_tag{display:inline-block;margin:14px 0 0;padding:4px 12px;border-radius:8px;background:#eef2ff;color:#1d4ed8;font-size:12.5px}
+  .ssc_home_foot{margin-top:34px;text-align:center;color:#9ca3af;font-size:13px;line-height:2}
+  @media (max-width:640px){
+    .ssc_home_head{padding:30px 24px}
+    .ssc_home_head h1{font-size:26px}
+  }
+</style>
+</head>
+<body class="ssc_home_body">
+<div class="ssc_home_wrap">
+
+  <header class="ssc_home_head">
+    <span class="ssc_home_badge">高 级 网 页 设 计 · 学 习 成 果</span>
+    <h1>孙绍词的课堂实践 · <b>Swiper 轮播任务</b></h1>
+    <p>这里是本站首页。下面三个入口分别是本次任务的成果页面、提示词与 AI 对话记录，以及完整的课堂实践目录。</p>
+  </header>
+
+  <main class="ssc_home_grid">
+    <a class="ssc_home_card" href="./1/swiper-task.html">
+      <div>
+        <span class="ssc_home_no">01 / 成果页面</span>
+        <h2>Swiper 课堂任务 · 大国重器光影展</h2>
+        <p>四个轮播全部完成：可拖动的最小轮播、圆点箭头、自动翻页，以及含 creative 电影墙的七种效果实验台；新增第六件展品爱达·魔都号与键盘控制。</p>
+      </div>
+      <div><span class="ssc_home_tag">可交互 · 直接拖动 / 点按钮</span><div class="ssc_home_more">打开成果页面</div></div>
+    </a>
+
+    <a class="ssc_home_card" href="./1/swiper-task-ai-log.html">
+      <div>
+        <span class="ssc_home_no">02 / 过程记录</span>
+        <h2>提示词与 AI 对话记录</h2>
+        <p>任务一的两轮提示词迭代对比、任务二 creative 的自学问答、任务三的超纲功能说明与答辩四连问答案，附两张验证截图。</p>
+      </div>
+      <div><span class="ssc_home_tag">含验证截图</span><div class="ssc_home_more">查看记录</div></div>
+    </a>
+
+    <a class="ssc_home_card" href="./1/index.html">
+      <div>
+        <span class="ssc_home_no">03 / 全部作业</span>
+        <h2>课堂实践目录</h2>
+        <p>HTML 基础、自我介绍、表格、盒模型、图文布局、SVG 与字体图标、Tab 选项卡、Swiper 轮播等全部课堂练习的索引。</p>
+      </div>
+      <div><span class="ssc_home_tag">课程归档</span><div class="ssc_home_more">进入目录</div></div>
+    </a>
+  </main>
+
+  <p class="ssc_home_foot">孙绍词 · 高级网页设计 · 2026-2027-1<br>源码仓库：github.com/13614980010/sunshaoci004</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-08
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：Swiper 任务一二三 · 提示词与 AI 对话记录（成果物展示页）
+  功能简介：把任务一的两轮提示词迭代、任务二的 creative 自学过程、任务三的
+            超纲功能与答辩答案排版成可直接浏览的网页，内嵌两张验证截图，
+            顶部提供跳转成果页面与课堂目录的入口。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swiper 任务一二三 · 提示词与 AI 对话记录</title>
+<style>
+  .ssc_log_body{margin:0;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937;line-height:1.9}
+  .ssc_log_page{max-width:960px;margin:0 auto;padding:36px 20px 70px}
+  .ssc_log_head{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);border-radius:20px;padding:34px 34px 28px;color:#fff;box-shadow:0 12px 30px rgba(15,43,91,.28)}
+  .ssc_log_head .ssc_log_badge{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:13px;letter-spacing:2px}
+  .ssc_log_head h1{margin:14px 0 10px;font-size:27px;line-height:1.45}
+  .ssc_log_head h1 b{color:#ffd166}
+  .ssc_log_meta{margin:0;font-size:13.5px;color:#d9e3f5}
+  .ssc_log_nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .ssc_log_nav a{padding:9px 20px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.34);color:#fff;font-size:13.5px;text-decoration:none;font-weight:bold}
+  .ssc_log_nav a.ssc_log_main{background:#e8890c;border-color:#e8890c}
+  .ssc_log_sec{background:#fff;border:1px solid #e8ecf5;border-radius:18px;padding:26px 30px;margin-top:24px;box-shadow:0 4px 14px rgba(31,41,55,.06);position:relative;overflow:hidden}
+  .ssc_log_sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#0f2b5b,#1d5bbf)}
+  .ssc_log_sec h2{margin:0 0 6px;font-size:20px;color:#111827}
+  .ssc_log_sec h3{margin:22px 0 8px;font-size:15.5px;color:#0f2b5b}
+  .ssc_log_sec p{margin:8px 0;font-size:14.5px;color:#374151}
+  .ssc_log_sec small{color:#9ca3af;font-size:13px}
+  .ssc_log_quote{margin:10px 0;padding:14px 18px;background:#203d43;color:#eef4f3;border-left:5px solid #e8890c;border-radius:10px;font-size:14px;white-space:pre-wrap}
+  .ssc_log_code{margin:10px 0;padding:14px 18px;background:#f6f8fb;border:1px solid #e2e8f5;border-radius:10px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.75;color:#0f2b5b;white-space:pre}
+  .ssc_log_table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  .ssc_log_table th,.ssc_log_table td{border:1px solid #e5e9f2;padding:9px 12px;text-align:left;vertical-align:top}
+  .ssc_log_table th{background:#eef2ff;color:#1d4ed8;font-weight:bold}
+  .ssc_log_shot{margin:14px 0 6px;border-radius:14px;overflow:hidden;border:1px solid #dbe4ff;box-shadow:0 8px 20px rgba(15,43,91,.14)}
+  .ssc_log_shot img{display:block;width:100%}
+  .ssc_log_shot figcaption{padding:9px 14px;background:#f6f8fc;color:#64748b;font-size:12.5px}
+  .ssc_log_ok{display:inline-block;margin:8px 0;padding:6px 14px;border-radius:8px;background:#f0fdf4;border:1.5px dashed #16a34a;color:#15803d;font-size:13.5px;font-weight:bold}
+  .ssc_log_foot{margin-top:28px;text-align:center;color:#9ca3af;font-size:13px}
+  @media (max-width:640px){
+    .ssc_log_head{padding:26px 22px}
+    .ssc_log_head h1{font-size:22px}
+    .ssc_log_sec{padding:22px 18px}
+  }
+</style>
+</head>
+<body class="ssc_log_body">
+<div class="ssc_log_page">
+
+  <header class="ssc_log_head">
+    <span class="ssc_log_badge">高 级 网 页 设 计 · 成 果 记 录</span>
+    <h1>Swiper 任务一二三 · <b>提示词与 AI 对话记录</b></h1>
+    <p class="ssc_log_meta">作者：孙绍词　·　建立时间：2026-11-08　·　使用模型：DeepSeek-V4.1-Flash</p>
+    <nav class="ssc_log_nav">
+      <a class="ssc_log_main" href="./swiper-task.html">▶ 打开成果页面（四个轮播）</a>
+      <a href="./index.html">← 课堂目录</a>
+    </nav>
+  </header>
+
+  <!-- 任务一 -->
+  <section class="ssc_log_sec">
+    <h2>任务一 · 提示词工程师：让 AI 听懂需求</h2>
+    <small>不写代码，写提示词；目标是让 AI 产出 effect 为 cube 的完整配置。</small>
+
+    <h3>第 1 轮提示词</h3>
+    <div class="ssc_log_quote">帮我写一段 Swiper 初始化代码，目标是 #wySw4 这个轮播：要能循环、能自动翻页、下面有圆点可以点，一开始就显示成立方体的效果。</div>
+
+    <h3>第 1 轮 AI 回答</h3>
+    <div class="ssc_log_code">new Swiper('#wySw4', {
+  effect: 'cube',
+  autoplay: true,
+  pagination: { el: '#wyPag4' },
+});</div>
+
+    <h3>第 1 轮的问题（粘进页面验证后逐条确认）</h3>
+    <table class="ssc_log_table">
+      <tr><th>需求</th><th>第 1 轮代码</th><th>问题</th></tr>
+      <tr><td>无缝循环</td><td>没有 loop</td><td>翻到最后一张就停住，回不到第一张</td></tr>
+      <tr><td>3.2 秒自动翻页</td><td>autoplay: true</td><td>只能用默认 3000 ms，改不了 3.2 秒</td></tr>
+      <tr><td>手动操作后不停</td><td>没有 disableOnInteraction: false</td><td>用户拖一下，自动播放被永久暂停</td></tr>
+      <tr><td>圆点可点击</td><td>pagination 缺 clickable</td><td>圆点只能看，点了没反应</td></tr>
+    </table>
+    <p>另外 speed 也没写，切换动画时长不受控制。</p>
+
+    <h3>第 2 轮提示词（把需求拆成“参数名 + 取值”）</h3>
+    <div class="ssc_log_quote">按下面 4 条硬性需求重写，每条都必须能在代码里找到对应参数，不要省略：
+① 无缝循环 —— loop: true；
+② 每 3.2 秒自动翻页，并且用户手动滑动之后自动播放要继续 —— autoplay: { delay: 3200, disableOnInteraction: false }；
+③ 圆点分页器指向 #wyPag4 且能点击跳转 —— pagination: { el: '#wyPag4', clickable: true }；
+④ 初始效果为立方体 —— effect: 'cube'。
+额外：切换动画时长 800 毫秒。</div>
+
+    <h3>第 2 轮 AI 回答（最终采用版本）</h3>
+    <div class="ssc_log_code">new Swiper('#wySw4', {
+  loop: true,
+  speed: 800,
+  effect: 'cube',
+  autoplay: {
+    delay: 3200,
+    disableOnInteraction: false,
+  },
+  pagination: {
+    el: '#wyPag4',
+    clickable: true,
+  },
+});</div>
+
+    <h3>验证与结论</h3>
+    <p>把第 2 轮代码粘进页面（临时把初始 effect 设为 cube）→ 刷新 → F12 读取实例参数 → 截图。</p>
+    <p>参数实测：effect=cube、loop=true、delay=3200、disableOnInteraction=false、pagination.el=#wyPag4、clickable=true，全部命中。</p>
+    <figure class="ssc_log_shot">
+      <img src="./verify/task1-cube.png" alt="cube 3D 立方体效果验证截图">
+      <figcaption>验证截图：cube 立方体正常渲染，底部圆点分页器可见（验证后页面初始效果恢复为 slide，符合任务四要求）</figcaption>
+    </figure>
+    <span class="ssc_log_ok">结论：四项需求全部通过，循环、3.2 秒自动翻、拖完继续翻、圆点可点</span>
+
+    <h3>答辩准备</h3>
+    <p><b>第一版提示词漏掉了哪个需求？</b>漏了“手动操作后自动播放不能停”，只写了 autoplay: true；另外 loop、clickable 也没写。</p>
+    <p><b>第二轮怎么“说清楚”的？</b>不再用“要能自动翻页”这种自然语言，而是把每条需求直接翻译成参数名和取值，AI 没有自由发挥的空间。</p>
+    <p><b>AI 第一次给的代码错在哪？</b>autoplay 用布尔值，无法控制延时，也不能保留手动操作后的继续播放；同时缺 loop、clickable、speed。</p>
+  </section>
+
+  <!-- 任务二 -->
+  <section class="ssc_log_sec">
+    <h2>任务二 · creative 仿写：课堂没讲，AI 教你</h2>
+    <small>课堂只讲了 6 种 effect，第 7 种 creative 靠读官方 demo 257-effect-creative.html 自学。</small>
+
+    <h3>提示词 1</h3>
+    <div class="ssc_log_quote">Swiper 的 effect 除了 slide / fade / cube / coverflow / flip / cards，还有没有别的？官方 demo 里有 257-effect-creative.html，它是怎么配置的？</div>
+    <h3>AI 回答 1</h3>
+    <p>有第 7 种：effect: 'creative'（自定义变换）。它必须配合 creativeEffect.prev / next 使用：prev 描述“上一张”在当前帧的位置，next 描述“下一张”的位置；每项可用 translate（[x, y, z]，x 可为百分比字符串）、rotate（[rx, ry, rz] 角度）、scale、opacity、shadow、origin。</p>
+
+    <h3>提示词 2（追问）</h3>
+    <div class="ssc_log_quote">那 prev 和 next 的 transform 具体各控制什么？当前正在看的那张受不受影响？</div>
+    <h3>AI 回答 2</h3>
+    <p>prev 控制已经翻过去、位于左侧的那张；next 控制还没进来、位于右侧的那张；当前 slide 本身始终是 identity（不位移、不旋转），所以三张的变换是分开配置的。</p>
+
+    <h3>最终实现（演示四的 creative 分支）</h3>
+    <div class="ssc_log_code">if (ssc_effect === 'creative') {
+  ssc_opt.creativeEffect = {
+    prev: {
+      shadow: true,
+      translate: ['-55%', 0, -320],
+      rotate: [0, 0, -8],
+      scale: 0.8,
+    },
+    next: {
+      shadow: true,
+      translate: ['60%', 0, -200],
+      rotate: [0, 0, 8],
+      scale: 1.1,
+    },
+  };
+}</div>
+    <p>prev：缩小到 0.8、向左移 55%、绕 Z 轴转 -8°、退到 -320px 景深，即“上一张缩小左移并带角度”。<br>
+       next：放大到 1.1、从右侧 60% 位置、转 8° 进场，即“下一张放大右移进场”。两个都开了 shadow，卡片有投影，像电影选片墙。</p>
+
+    <figure class="ssc_log_shot">
+      <img src="./verify/task2-creative.png" alt="creative 电影墙效果验证截图">
+      <figcaption>验证截图：点击「creative 电影墙」后，左侧上一张明显缩小并倾斜，当前张居中</figcaption>
+    </figure>
+
+    <h3>答辩准备</h3>
+    <p><b>transform 里的百分号是相对谁的？</b>相对 slide 自身尺寸：translate 的第一个值（X）按 slide 自身宽度算，第二个值（Y）按自身高度算；Z 轴用 px，表示景深。不是相对容器宽度。</p>
+    <p><b>改一个数值让卡片转 20 度？</b>把 prev.rotate 的第三个值（绕 Z 轴）从 -8 改成 -20，上一张就倾斜 20°。</p>
+  </section>
+
+  <!-- 任务三 -->
+  <section class="ssc_log_sec">
+    <h2>任务三 · 综合创作 + 技术答辩</h2>
+
+    <h3>1）第六件展品：爱达·魔都号</h3>
+    <p>图片由 AI 生成（横版 16:9，实际输出 1368×768）。生成提示词：</p>
+    <div class="ssc_log_quote">生成一张 16:9 的写实照片：首艘国产大型邮轮爱达·魔都号停靠在上海邮轮港，白色船体配蓝红装饰带，船头有大面积艺术彩绘，蓝天白云、阳光充足，广角、电影感摄影。</div>
+    <p>slide 结构与原有 5 张完全一致（img + .wy-cap 标题/说明），插入位置在演示四最后一张之后。</p>
+
+    <h3>2）超纲能力：keyboard 键盘控制</h3>
+    <div class="ssc_log_code">keyboard: {
+  enabled: true,
+  onlyInViewport: true,
+}</div>
+    <p>选它的理由：mousewheel 会劫持页面滚动，zoom 与 creative 3D 变换容易冲突，parallax 需要给每个子元素加 data-swiper-parallax 属性；keyboard 只响应 ← / →，不影响页面其他交互，实现成本最低、演示效果最直接。</p>
+    <p>实测：点一下轮播后按 →，realIndex 由 2 变为 3。</p>
+
+    <h3>答辩四连问</h3>
+    <p><b>1. 这段代码什么意思？</b>ssc_fxOptions(effect) 是一个配置工厂：返回 loop / speed / effect / autoplay / pagination / keyboard 的公共配置；如果 effect 是 creative，再追加 creativeEffect 描述前后两张的 3D 变换。这样按钮切换时不用复制两份配置。</p>
+    <p><b>2. AI 第一次给的哪里不对、你改了什么？</b>第一次只给了 effect: 'creative'，没有给 creativeEffect，切换后画面完全不动，等于没切换。补上 prev / next 之后才有电影墙效果。</p>
+    <p><b>3. 新参数的作用？</b>keyboard.enabled 开启键盘支持；keyboard.onlyInViewport 保证只有轮播在视口内时才响应方向键，避免页面其他区域也被劫持。creativeEffect 里 translate 第三个值是景深（Z 轴），scale 控制缩放，shadow 给卡片加投影。</p>
+    <p><b>4. 现场把 delay 改成指定值并解释预期变化。</b>例：delay 从 3200 改成 1000，每张只停留 1 秒就翻页，翻页节奏快 3.2 倍；disableOnInteraction: false 不变，所以手动拖完仍会继续按 1 秒翻。</p>
+  </section>
+
+  <!-- 验证清单 -->
+  <section class="ssc_log_sec">
+    <h2>验证清单</h2>
+    <table class="ssc_log_table">
+      <tr><th>项目</th><th>结果</th></tr>
+      <tr><td>控制台报错</td><td>0</td></tr>
+      <tr><td>演示四 slide 数量</td><td>6（含爱达·魔都号）</td></tr>
+      <tr><td>效果按钮数量</td><td>7（含 creative）</td></tr>
+      <tr><td>creative 切换</td><td>prev -55%/0/-320、next 60%/0/-200 生效</td></tr>
+      <tr><td>键盘控制</td><td>按 → 后 realIndex 2 → 3</td></tr>
+      <tr><td>第六张图</td><td>加载成功，1368×768（16:9）</td></tr>
+    </table>
+  </section>
+
+  <p class="ssc_log_foot"><a href="./swiper-task.html">打开成果页面</a>　·　<a href="./index.html">返回课堂目录</a>　·　孙绍词 · 高级网页设计 · 2026-2027-1</p>
+</div>
+</body>
+</html>
