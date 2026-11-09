@@ -67,6 +67,10 @@
 
     <h3>第 1 轮提示词</h3>
     <div class="ssc_log_quote">帮我写一段 Swiper 初始化代码，目标是 #wySw4 这个轮播：要能循环、能自动翻页、下面有圆点可以点，一开始就显示成立方体的效果。</div>
+    <figure class="ssc_log_shot">
+      <img src="./verify/task1-round1.png" alt="第 1 轮提示词的效果图：立方体轮播" loading="lazy">
+      <figcaption>第 1 轮效果图：把第 1 轮代码粘进页面后，cube 立方体能力渲染出来，但底部圆点不可点、无法无缝循环</figcaption>
+    </figure>
 
     <h3>第 1 轮 AI 回答</h3>
     <div class="ssc_log_code">new Swiper('#wySw4', {
@@ -92,6 +96,10 @@
 ③ 圆点分页器指向 #wyPag4 且能点击跳转 —— pagination: { el: '#wyPag4', clickable: true }；
 ④ 初始效果为立方体 —— effect: 'cube'。
 额外：切换动画时长 800 毫秒。</div>
+    <figure class="ssc_log_shot">
+      <img src="./verify/task1-cube.png" alt="第 2 轮提示词的效果图：参数全部命中" loading="lazy">
+      <figcaption>第 2 轮效果图：按“参数名 + 取值”重写后，cube 正常渲染、可无缝循环、底部圆点可点击跳转</figcaption>
+    </figure>
 
     <h3>第 2 轮 AI 回答（最终采用版本）</h3>
     <div class="ssc_log_code">new Swiper('#wySw4', {

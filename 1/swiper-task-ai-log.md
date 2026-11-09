@@ -16,6 +16,8 @@
 
 > 帮我写一段 Swiper 初始化代码，目标是 `#wySw4` 这个轮播：要能循环、能自动翻页、下面有圆点可以点，一开始就显示成立方体的效果。
 
+![第 1 轮效果图：cube 立方体](./verify/task1-round1.png)
+
 ### 第 1 轮 AI 回答
 
 ```js
@@ -45,6 +47,8 @@ new Swiper('#wySw4', {
 > ③ 圆点分页器指向 `#wyPag4` 且能点击跳转 —— `pagination: { el: '#wyPag4', clickable: true }`；
 > ④ 初始效果为立方体 —— `effect: 'cube'`。
 > 额外：切换动画时长 800 毫秒。
+
+![第 2 轮效果图：参数全部命中](./verify/task1-cube.png)
 
 ### 第 2 轮 AI 回答（最终采用版本）
 
