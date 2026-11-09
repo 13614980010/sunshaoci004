@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-09
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：AI 使用记录（ssc_prompt 提示词日志展示页）
+  功能简介：把只追加的提示词日志 ssc_prompt.md 逐条渲染成网页，
+            每条显示记录序号、时间、使用模型与提示词原文，
+            顶部提供返回课堂目录的入口，方便直接点击查看历史记录。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 使用记录 · ssc_prompt 提示词日志</title>
+<style>
+  .ssc_p_body{margin:0;font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937;line-height:1.9}
+  .ssc_p_wrap{max-width:960px;margin:0 auto;padding:36px 20px 70px}
+  .ssc_p_head{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);border-radius:20px;padding:34px;color:#fff;box-shadow:0 12px 30px rgba(15,43,91,.28)}
+  .ssc_p_head .ssc_p_badge{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:13px;letter-spacing:2px}
+  .ssc_p_head h1{margin:14px 0 10px;font-size:27px;line-height:1.45}
+  .ssc_p_head h1 b{color:#ffd166}
+  .ssc_p_sub{margin:0;font-size:13.5px;color:#d9e3f5}
+  .ssc_p_nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .ssc_p_nav a{padding:9px 20px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.34);color:#fff;font-size:13.5px;text-decoration:none;font-weight:bold}
+  .ssc_p_list{margin-top:24px;display:grid;gap:14px}
+  .ssc_p_card{background:#fff;border:1px solid #e8ecf5;border-left:5px solid #1d5bbf;border-radius:14px;padding:18px 22px;box-shadow:0 4px 12px rgba(31,41,55,.06)}
+  .ssc_p_meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px}
+  .ssc_p_no{padding:4px 12px;border-radius:8px;background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;font-size:13px;font-weight:bold}
+  .ssc_p_time,.ssc_p_model{font-size:12.8px;color:#64748b;background:#f1f5fb;border:1px solid #e2e8f5;border-radius:999px;padding:3px 12px}
+  .ssc_p_text{margin:0;font-size:14px;color:#1f2937;white-space:pre-wrap;word-break:break-word}
+  .ssc_p_text code{background:#eef2ff;color:#1d4ed8;padding:1px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:12.8px}
+  .ssc_p_foot{margin-top:30px;text-align:center;color:#9ca3af;font-size:13px;line-height:2}
+  .ssc_p_foot a{color:#1d5bbf;text-decoration:none}
+</style>
+</head>
+<body class="ssc_p_body">
+<div class="ssc_p_wrap">
+
+  <header class="ssc_p_head">
+    <span class="ssc_p_badge">高 级 网 页 设 计 · A I 使 用 记 录</span>
+    <h1>提示词日志 · <b>ssc_prompt.md</b></h1>
+    <p class="ssc_p_sub">共 26 条记录　·　按时间顺序只追加，包含时间、使用模型与提示词原文</p>
+    <nav class="ssc_p_nav">
+      <a href="./index.html">← 返回课堂目录</a>
+      <a href="./swiper-task.html">查看 Swiper 成果页面</a>
+    </nav>
+  </header>
+
+  <main class="ssc_p_list">
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 1</span>
+      <span class="ssc_p_time">🕒 2026-10-22 13:42:45</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">设定规则：从现在开始，所有CSS类名，id名、js变量都以ssc_开始，所有的提示词都在执行之前写入文件ssc_prompt.md，以附加的方式写入，不覆盖之前的内容，写入的内容包括时间、使用的模型、提示词内容。
+<code>c:\Users\29118\Desktop\高级网页设计/1</code></p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 2</span>
+      <span class="ssc_p_time">🕒 2026-10-22 13:48:21</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">好的，按这个方案开始</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 3</span>
+      <span class="ssc_p_time">🕒 2026-10-22 13:49:22</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">好的，开始吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 4</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:02:10</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">好的，执行吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 5</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:03:15</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">好的，执行吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 6</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:08:51</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">设置规则：新建的html文件加入超链接到首页index.html<code>c:\Users\29118\Desktop\高级网页设计/1</code></p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 7</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:13:09</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">做两个html网页iconfont-1.html,inconfont-2.html，分别显示font awesome图标和lucide图标，前者使用字体图标的方式，后者使用svg的方式，相关的cdn文件下载到本目录下的cdn目录。<code>c:\Users\29118\Desktop\高级网页设计/1</code></p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 8</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:23:10</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">请根据skills下面的frontend-design里面的skill去优化iconfont-1.html和iconfont-2.html两个页面的设计等个，使其更有艺术美感，更优雅。</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 9</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:29:02</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">根据font目录中的iconfont图标完成移动端的固定的自适应宽度的下导航，导航项目包括4个，完成html网页的设计，网页名称iconfont-3.html和iconfont-4.html分别使用字体图标和svg，包括右上角的数字徽章和红点。</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 10</span>
+      <span class="ssc_p_time">🕒 2026-10-22 14:43:59</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4-Flash</span></div>
+    <p class="ssc_p_text">第一次gitee自动提交步骤：<code>https://spontaneous-valkyrie-4e4229.netlify.app/custom-skill-guide</code>，<code>c:\Users\29118\Desktop\高级网页设计/1</code></p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 11</span>
+      <span class="ssc_p_time">🕒 2026-10-29 13:35:19</span>
+      <span class="ssc_p_model">🤖 opencode/big-pickle</span></div>
+    <p class="ssc_p_text">Create or update <code>AGENTS.md</code> for this repository. 目标是生成一份紧凑的说明文件，帮助后续 OpenCode 会话避免错误并快速上手。</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 12</span>
+      <span class="ssc_p_time">🕒 2026-11-02 13:38:12</span>
+      <span class="ssc_p_model">🤖 GLM-5.3-Flash</span></div>
+    <p class="ssc_p_text">修改规则<code>c:\Users\29118\Desktop\高级网页设计\1\AGENTS.md</code>，再新建一个html文件时，要加入注释，尤其是js部分的代码函数的主要功能实现。注释内容包括：作者[孙绍词]、建立时间、使用模型、功能名称以及简介</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 13</span>
+      <span class="ssc_p_time">🕒 2026-11-02 13:38:12</span>
+      <span class="ssc_p_model">🤖 GLM-5.3-Flash</span></div>
+    <p class="ssc_p_text">AGENTS.md 所有说明、检查条目统一简体中文；文件路径、HTML、CSS、JS 标识符保留英文。后续在这个项目里，生成文档、检查清单都遵守这条约定。</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 14</span>
+      <span class="ssc_p_time">🕒 2026-11-02 13:43:05</span>
+      <span class="ssc_p_model">🤖 GLM-5.3-Flash</span></div>
+    <p class="ssc_p_text">请给我新建一个html文件，显示tab选项卡，选项卡分别为国内新闻、省内新闻、国际新闻、最热新闻，国内新闻作为默认选项。就是、文件单独放在js文件夹中，外部引用，js部分tab选项卡可复用。实现代码中包含事件监听，清除所有选项卡的选中状态再设置当前元素的选中状态。</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 15</span>
+      <span class="ssc_p_time">🕒 2026-11-02 14:23:32</span>
+      <span class="ssc_p_model">🤖 GLM-5.3-Flash</span></div>
+    <p class="ssc_p_text"><code>c:\Users\29118\Desktop\高级网页设计\1\tab.html</code>把这个html的内容替换成和<code>c:\Users\29118\Desktop\高级网页设计\1\5</code>这个文件夹里面图面的内容一样但是不引用这个文件夹里的图片</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 16</span>
+      <span class="ssc_p_time">🕒 2026-11-02 14:29:02</span>
+      <span class="ssc_p_model">🤖 GLM-5.3-Flash</span></div>
+    <p class="ssc_p_text">再在这个代码中加上我的学号姓名拼音24001010806ssc,保证能在效果页面能体现出我的个人信息</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 17</span>
+      <span class="ssc_p_time">🕒 2026-11-05 14:05:12</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">在页面底部 <code>&lt;script&gt;</code> 中初始化 <code>#wySw1</code>，让它成为可拖动的轮播
+<code>c:\Users\29118\Desktop\高级网页设计\1\swiper</code></p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 18</span>
+      <span class="ssc_p_time">🕒 2026-11-05 14:32:40</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">根据图片内容，和 demo 中 <code>220-effect-fade.html</code> 那几个文件中的代码，完成
+<code>c:\Users\29118\Desktop\高级网页设计\1\swiper-task.html</code> 的任务四</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 19</span>
+      <span class="ssc_p_time">🕒 2026-11-05 15:10:18</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">ReferenceError: Swiper is not defined</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 20</span>
+      <span class="ssc_p_time">🕒 2026-11-05 15:20:47</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">好的，执行吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 21</span>
+      <span class="ssc_p_time">🕒 2026-11-05 15:24:33</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">所以没有问题了对吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 22</span>
+      <span class="ssc_p_time">🕒 2026-11-05 15:48:33</span>
+      <span class="ssc_p_model">🤖 Kimi-K3</span></div>
+    <p class="ssc_p_text">好的，帮我提交到 GitHub</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 23</span>
+      <span class="ssc_p_time">🕒 2026-11-08 10:12:04</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4.1-Flash</span></div>
+    <p class="ssc_p_text">根据图片内容完成
+（附企业微信截图：任务一 提示词工程师 / 任务二 creative 仿写 / 任务三 综合创作 + 技术答辩，要求 11.9 前提交到 GitHub 并给提示词留有访问入口）</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 24</span>
+      <span class="ssc_p_time">🕒 2026-11-09 09:36:20</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4.1-Flash</span></div>
+    <p class="ssc_p_text">确保链接点击可以看见我的成果物</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 25</span>
+      <span class="ssc_p_time">🕒 2026-11-09 09:41:10</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4.1-Flash</span></div>
+    <p class="ssc_p_text">好的，执行吧</p>
+  </article>
+  <article class="ssc_p_card">
+    <div class="ssc_p_meta"><span class="ssc_p_no">记录 26</span>
+      <span class="ssc_p_time">🕒 2026-11-09 10:05:00</span>
+      <span class="ssc_p_model">🤖 DeepSeek-V4.1-Flash</span></div>
+    <p class="ssc_p_text">我需要把上次的 ai 提示词加到 <code>c:\Users\29118\Desktop\高级网页设计\1\ssc_prompt.md</code> 中，时间和使用模型也加进去，再把 <code>c:\Users\29118\Desktop\高级网页设计\1\ssc_prompt.md</code> 做一个链接，可以点进去查看使用 ai 的记录</p>
+  </article>
+  </main>
+
+  <p class="ssc_p_foot"><a href="./index.html">返回课堂目录</a>　·　孙绍词 · 高级网页设计 · 2026-2027-1<br>原始日志：ssc_prompt.md（本页由日志逐条渲染，新增记录后需同步更新）</p>
+</div>
+</body>
+</html>
