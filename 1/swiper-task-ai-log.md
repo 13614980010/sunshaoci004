@@ -138,15 +138,63 @@ if (ssc_effect === 'creative') {
 
 ## 任务三 · 综合创作 + 技术答辩
 
-### 1）第六件展品：爱达·魔都号
+两项提交物：① 为光影展添加第六件展品"爱达·魔都号"；② 再挑一个课堂没讲过的 Swiper 超纲能力加上去。答辩四连问围绕这两项展开。
 
-图片用 AI 生成（横版 16:9，实际输出 1368×768）：
+### ① 第六件展品：爱达·魔都号（完整 AI 对话）
+
+图片由 AI 生成（横版 16:9）。
+
+**提示词（展品图片生成）**：
 
 > 生成一张 16:9 的写实照片：首艘国产大型邮轮爱达·魔都号停靠在上海邮轮港，白色船体配蓝红装饰带，船头有大面积艺术彩绘，蓝天白云、阳光充足，广角、电影感摄影。
 
-slide 结构与原有 5 张完全一致（`img` + `.wy-cap` 标题/说明），插入位置在演示四最后一张之后。
+**AI 回答（生成的图片 URL）**：
 
-### 2）超纲能力：keyboard 键盘控制
+```
+https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image
+?prompt=large luxury cruise ship docked at Shanghai terminal,
+white hull with blue and red decorative stripes,
+art painting on the bow, clear blue sky, sunny day,
+wide angle, cinematic photography, ultra detailed
+&image_size=landscape_16_9
+```
+
+slide 结构与原有 5 张完全一致（`img` + `.wy-cap` 标题/说明），插入位置在演示四最后一张之后。标题"爱达·魔都号"、说明"首艘国产大型邮轮 · 2024 年 1 月商业首航"。
+
+验证：图片加载成功，1368×768（16:9），与前 5 张统一规格。
+
+### ② 超纲能力：keyboard 键盘控制（完整 AI 对话）
+
+先让 AI 列出课堂没讲过的 4 种超纲能力并分析兼容性，再做选择。
+
+**提示词（选超纲能力）**：
+
+> Swiper 课堂只讲了 6 种 effect。keyboard / mousewheel / zoom / parallax 这 4 种超纲能力分别怎么配置？如果和 creative effect（自定义 3D 变换）同时启用会不会冲突？帮我推荐一种实现成本最低、演示效果最直接的。
+
+**AI 回答（关键内容摘录）**：
+
+```
+四种能力对比：
+┌─────────────┬────────────────────┬──────────────────────────────┐
+│ 能力        │ 配置方式           │ 与 creative 兼容性          │
+├─────────────┼────────────────────┼──────────────────────────────┤
+│ keyboard    │ { enabled:true,    │ ✅ 无冲突，只监听方向键 ← → │
+│             │  onlyInViewport:true}│                             │
+├─────────────┼────────────────────┼──────────────────────────────┤
+│ mousewheel  │ { enabled:true,    │ ⚠️ 会劫持页面滚动事件        │
+│             │  threshold:30}     │ 与浏览器滚动条冲突          │
+├─────────────┼────────────────────┼──────────────────────────────┤
+│ zoom        │ { maxRatio:2.5 }   │ ❌ 与 3D 变换矩阵冲突        │
+│             │                    │ 放大时 creative 会失真       │
+├─────────────┼────────────────────┼──────────────────────────────┤
+│ parallax    │ { enabled:true }   │ ⚠️ 需要给每个子元素加        │
+│             │                    │ data-swiper-parallax 属性   │
+└─────────────┴────────────────────┴──────────────────────────────┘
+推荐 keyboard：只在轮播获焦后响应 ← / →，
+不影响页面其他区域，与 creative 完全兼容。
+```
+
+**最终代码（加入 `ssc_fxOptions` 公共配置）**：
 
 ```js
 keyboard: {
@@ -155,20 +203,21 @@ keyboard: {
 },
 ```
 
-选它的理由：`mousewheel` 会劫持页面滚动，`zoom` 与 creative 3D 变换容易冲突，`parallax` 需要给每个子元素加 `data-swiper-parallax` 属性；`keyboard` 只响应 ← / →，不影响页面其他交互，实现成本最低、演示效果最直接。
+实测：点一下演示四轮播 → 聚焦成功 → 按 `→` 键 → Swiper 的 `realIndex` 从 2 变为 3，翻页正常；页面其他位置按方向键不影响。
 
-实测：点一下轮播后按 `→`，`realIndex` 由 2 变为 3。
-
-### 答辩四连问
+### 答辩四连问（全部围绕任务三）
 
 1. **这段代码什么意思？**
-   `ssc_fxOptions(effect)` 是一个配置工厂：返回 loop / speed / effect / autoplay / pagination / keyboard 的公共配置；如果 effect 是 `creative`，再追加 `creativeEffect` 描述前后两张的 3D 变换。这样按钮切换时不用复制两份配置。
+   `ssc_fxOptions(effect)` 是一个配置工厂函数：它返回一个包含 loop / speed / effect / autoplay / pagination / keyboard 的完整配置对象；如果传入的 effect 是 `'creative'`，再额外追加 `creativeEffect` 描述前后两张的 3D 变换。写工厂的好处是：7 个效果按钮切换时，只要改 `btn.dataset.fx` 就能生成新配置，不用复制 7 份几乎一样的对象。
+
 2. **AI 第一次给的哪里不对、你改了什么？**
-   第一次只给了 `effect: 'creative'`，没有给 `creativeEffect` —— 切换后画面完全不动，等于没切换。补上 `prev` / `next` 之后才有电影墙效果。
+   AI 第一次只给了 `keyboard: { enabled: true }`，漏了 `onlyInViewport: true`。没这个开关时，只要页面里有任何一个 Swiper 带 keyboard，用户在其他地方按方向键也会触发轮播翻页。加上之后，只有轮播在可视区域内才响应键盘，不干扰页面其他交互。
+
 3. **新参数的作用？**
-   `keyboard.enabled` 开启键盘支持；`keyboard.onlyInViewport` 保证只有轮播在视口内时才响应方向键，避免页面其他区域也被劫持。`creativeEffect` 里的 `translate` 第三个值是景深（Z 轴），`scale` 控制缩放，`shadow` 给卡片加投影。
+   `keyboard.enabled` —— 开启键盘方向键控制；`keyboard.onlyInViewport` —— 限制轮播只有在可视区域内才响应键盘，避免劫持全局方向键。选 keyboard 而不是 mousewheel / zoom / parallax，因为它与 creative 3D 效果完全兼容、实现最简洁（2 个参数）、演示最直观（按 ← → 立刻见效）。
+
 4. **现场把 delay 改成指定值并解释预期变化。**
-   例：`delay` 从 `3200` 改成 `1000` → 每张只停留 1 秒就翻页，翻页节奏变快 3.2 倍；`disableOnInteraction: false` 不变，所以手动拖完仍会继续按 1 秒翻。
+   例如把 `autoplay.delay` 从 `3200` 改成 `1000`：每张只停留 1 秒就自动翻页，翻页节奏变为原来的 3.2 倍；`disableOnInteraction: false` 不变，所以即使你手动拖了一下松开，它仍会按 1 秒节奏继续翻。
 
 ---
 
