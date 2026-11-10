@@ -6,19 +6,37 @@
 - 在线页面（可直接查看成果）：https://13614980010.github.io/sunshaoci004/1/swiper-task.html
 - 记录页（网页版）：https://13614980010.github.io/sunshaoci004/1/swiper-task-ai-log.html
 - 仓库源码：[1/swiper-task.html](https://github.com/13614980010/sunshaoci004/blob/main/1/swiper-task.html)（演示四 `#wySw4`）
-- 验证截图：[task1-cube.png](./verify/task1-cube.png)、[task2-creative.png](./verify/task2-creative.png)
+- 验证截图：[task1-round1.png](./verify/task1-round1.png)、[task1-cube.png](./verify/task1-cube.png)、[task2-creative.png](./verify/task2-creative.png)
 
 ---
 
 ## 任务一 · 提示词工程师：让 AI 听懂需求
 
-### 第 1 轮提示词
+不写代码，写提示词。第 1 轮使用自然语言描述，第 2 轮改为“参数名 + 取值”，通过对比展示提示词迭代过程。
+
+### 两轮对比总览
+
+| 对比项 | 第 1 轮：自然语言描述 | 第 2 轮：参数名 + 取值 |
+|---|---|---|
+| 无缝循环 | 未写 `loop`，实测 `false` | `loop: true`，通过 |
+| 3.2 秒自动翻页 | `autoplay: true`，默认 3000ms | `delay: 3200`，通过 |
+| 手动操作后不停 | 未设置，拖动后停止 | `disableOnInteraction: false`，通过 |
+| 圆点可点击 | 缺少 `clickable`，点击无反应 | `clickable: true`，通过 |
+| 初始 cube 效果 | `effect: 'cube'`，通过 | `effect: 'cube'`，通过 |
+| 动画时长 | 未写 `speed`，默认 300ms | `speed: 800`，通过 |
+| 最终结论 | 部分通过 | 四项需求全部通过 |
+
+### 第 1 轮：自然语言描述（部分通过）
+
+**提示词：**
 
 > 帮我写一段 Swiper 初始化代码，目标是 `#wySw4` 这个轮播：要能循环、能自动翻页、下面有圆点可以点，一开始就显示成立方体的效果。
 
-![第 1 轮效果图：cube 立方体](./verify/task1-round1.png)
+**验证截图：**
 
-### 第 1 轮 AI 回答
+![第 1 轮效果图：cube 能渲染，但其他配置有遗漏](./verify/task1-round1.png)
+
+**AI 回答：**
 
 ```js
 new Swiper('#wySw4', {
@@ -28,18 +46,13 @@ new Swiper('#wySw4', {
 });
 ```
 
-### 第 1 轮的问题（验证后逐条确认）
+**页面实测：** `effect=cube`、`loop=false`、`speed=300`、`delay=3000`、`clickable=false`；手动拖动后自动播放停止。
 
-| 需求 | 第 1 轮代码 | 问题 |
-|---|---|---|
-| 无缝循环 | 没有 `loop` | 翻到最后一张就停住，回不到第一张 |
-| 3.2 秒自动翻页 | `autoplay: true` | 只能用默认 3000 ms，改不了 3.2 秒 |
-| 手动操作后不停 | 没有 `disableOnInteraction: false` | 用户拖一下，自动播放被永久暂停 |
-| 圆点可点击 | `pagination` 缺 `clickable` | 圆点只能看，点了没反应 |
+**一句话结论：** 只有 cube 和自动翻页生效，其余需求未完整实现。
 
-另外 `speed` 也没写，切换动画时长不受控制。
+### 第 2 轮：参数名 + 取值（全部通过）
 
-### 第 2 轮提示词（把需求拆成"参数名 + 取值"）
+**提示词：**
 
 > 按下面 4 条硬性需求重写，每条都必须能在代码里找到对应参数，不要省略：
 > ① 无缝循环 —— `loop: true`；
@@ -48,9 +61,11 @@ new Swiper('#wySw4', {
 > ④ 初始效果为立方体 —— `effect: 'cube'`。
 > 额外：切换动画时长 800 毫秒。
 
+**验证截图：**
+
 ![第 2 轮效果图：参数全部命中](./verify/task1-cube.png)
 
-### 第 2 轮 AI 回答（最终采用版本）
+**AI 回答（最终采用）：**
 
 ```js
 new Swiper('#wySw4', {
@@ -68,19 +83,17 @@ new Swiper('#wySw4', {
 });
 ```
 
-### 验证方式与结论
+**页面实测：** `effect=cube`、`loop=true`、`speed=800`、`delay=3200`、`disableOnInteraction=false`、`clickable=true`。
 
-把第 2 轮代码粘进页面（临时把初始 effect 设为 `cube`）→ 刷新 → F12 读取实例参数 → 截图。
+**一句话结论：** 四项需求全部通过，cube 正常、无缝循环、3.2 秒自动翻页、拖动后继续、圆点可点击。
 
-- 参数实测：`effect="cube"`、`loop=true`、`delay=3200`、`disableOnInteraction=false`、`pagination.el="#wyPag4"`、`clickable=true` —— 全部命中。
-- 截图：[verify/task1-cube.png](./verify/task1-cube.png)
-- 一句话结论：cube 立方体正常渲染、圆点可点、3.2 秒自动翻、拖完继续翻，四项需求全部通过；验证完成后页面初始效果仍按要求保留为 `slide`（任务四的基础分要求）。
+验证方法：分别把两轮代码粘进页面，刷新后通过 F12 读取实例参数并操作轮播、截图；验证完成后，成果页初始效果恢复为任务四要求的 `slide`。
 
-### 答辩准备
+### 答辩抽问
 
-- **第一版提示词漏掉了哪个需求？** 漏了"手动操作后自动播放不能停"，只写了 `autoplay: true`；另外 `loop`、`clickable` 也没写。
-- **第二轮怎么"说清楚"的？** 不再用"要能自动翻页"这种自然语言，而是把每条需求直接翻译成参数名和取值，AI 没有可以自由发挥的空间。
-- **AI 第一次给的代码错在哪？** `autoplay` 用布尔值，无法控制延时，也不能保留手动操作后的继续播放；同时缺 `loop`、`clickable`、`speed`。
+- **第一版提示词漏掉了哪个需求？** 漏了“每 3.2 秒”的明确时长和“手动操作后自动播放不停止”；循环和圆点可点击虽然提到了，但没有写明参数，AI 的回答也漏掉了 `loop` 和 `clickable`。
+- **第二轮怎么“说清楚”的？** 把四项需求逐条编号，每条都给出准确的参数名和取值，并额外指定 `speed: 800`，让 AI 没有省略或自由发挥的空间。
+- **AI 第一次给的代码错在哪？** `autoplay: true` 只能使用默认 3000ms，且手动操作后会停止；同时缺少 `loop: true`、`delay: 3200`、`disableOnInteraction: false`、`clickable: true` 和 `speed: 800`。
 
 ---
 
