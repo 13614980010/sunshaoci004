@@ -59,6 +59,7 @@
   .wy-swiper .wy-cap p{font-size:13px;color:#dbe6f8;margin-top:4px}
   /* 分页器配色 */
   .wy-swiper .swiper-pagination-bullet{background:#0f2b5b;opacity:.35}
+  #wySw3 .swiper-zoom-container{cursor:zoom-in}
   .wy-swiper .swiper-pagination-bullet-active{background:#e8890c;opacity:1;width:22px;border-radius:6px}
   /* 导航按钮配色 */
   .wy-swiper .swiper-button-next,.wy-swiper .swiper-button-prev{
@@ -175,14 +176,15 @@
     </div>
     <div class="wy-demo">
       <span class="wy-demo-tag">🎛️ 演示三 · 每 2.6 秒自动翻页（救活后什么都不用做，看着就行）</span>
+      <span class="wy-demo-tag">⌨️🖱️🔍 超纲三连：点一下后按 ← / → 键切换 · 鼠标滚轮翻页 · 双击图片放大 3 倍</span>
       <div class="wy-swiper">
         <div class="swiper" id="wySw3">
           <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"><div class="wy-cap"><h3>天宫空间站</h3><p>巡天遥看一千河</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号动车组"><div class="wy-cap"><h3>复兴号动车组</h3><p>中国速度 · 风驰电掣</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>蓝天之上 · 大国担当</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>万米深潜 · 无畏探索</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>仰望星空 · 脚踏实地</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"></div><div class="wy-cap"><h3>天宫空间站</h3><p>巡天遥看一千河</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号动车组"></div><div class="wy-cap"><h3>复兴号动车组</h3><p>中国速度 · 风驰电掣</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"></div><div class="wy-cap"><h3>C919 大飞机</h3><p>蓝天之上 · 大国担当</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"></div><div class="wy-cap"><h3>奋斗者号</h3><p>万米深潜 · 无畏探索</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"></div><div class="wy-cap"><h3>中国天眼 FAST</h3><p>仰望星空 · 脚踏实地</p></div></div>
           </div>
           <div class="swiper-pagination" id="wyPag3"></div>
         </div>
@@ -262,18 +264,66 @@
     });
 
   // ── 任务 3：初始化 #wySw3，循环 + 2.6 秒自动翻页 + 拖动后不停 + 圆点 ──
-  // TODO: 在这里写你的代码
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-12
+   * 使用模型：DeepSeek-V4.1-Flash
+   * 功能名称：wySw3 自动播放 + 三项超纲交互
+   * 功能简介：基础四件套（loop / 2.6 秒自动播放且手动后不停止 / 可点圆点）；
+   *           超纲三项——keyboard 方向键切换（焦点进入后才响应）、
+   *           mousewheel 鼠标滚轮翻页（只吃掉横向滑动、滚到边缘放行页面）、
+   *           zoom 双击放大到 3 倍、再双击还原（依赖 slide 内的
+   *           .swiper-zoom-container 容器）。
+   */
  var wySw3 = new Swiper("#wySw3", {
       loop: true,
       autoplay: {
-        delay: 2500,
+        delay: 2600,
         disableOnInteraction: false,
       },
       pagination: {
         el: "#wyPag3",
         clickable: true,
       },
+      // 超纲①：键盘控制——点一下轮播后按 ← / → 切换，onlyInViewport 保证只在可见时响应
+      keyboard: {
+        enabled: true,
+        onlyInViewport: true,
+      },
+      // 超纲②：鼠标滚轮——forceToAxis 只把滚轮量用于横向翻页，
+      //          releaseOnEdges 让滚到首尾时把滚动交还页面
+      mousewheel: {
+        forceToAxis: true,
+        releaseOnEdges: true,
+        sensitivity: 1,
+      },
+      // 超纲③：缩放能力——双击放大到 3 倍，具体双击事件在下方绑定
+      zoom: {
+        maxRatio: 3,
+      },
     });
+
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-12
+   * 使用模型：DeepSeek-V4.1-Flash
+   * 函数名称：ssc_zoomToggle
+   * 功能简介：双击 #wySw3 图片在“放大 3 倍”和“还原”之间切换。
+   *           放大期间暂停自动播放，避免 2.6 秒后翻页把放大状态冲掉；
+   *           还原后重新开启自动播放，保证“手动操作后不停止”的要求不变。
+   */
+  var ssc_zoomed = false;
+  document.querySelector('#wySw3').addEventListener('dblclick', function () {
+    if (ssc_zoomed) {
+      wySw3.zoom.out();
+      wySw3.autoplay.start();
+      ssc_zoomed = false;
+    } else {
+      wySw3.zoom.in();
+      wySw3.autoplay.stop();
+      ssc_zoomed = true;
+    }
+  });
 
   // ── 任务 4：初始化 #wySw4，循环 + 3.2 秒自动播放 + 圆点 + 初始 effect ──
   /**

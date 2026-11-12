@@ -6,3 +6,7 @@ Desktop.ini
 .DS_Store
 .trae-html-share-packages/
 *.zip
+
+# 依赖目录
+node_modules/
+

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-12
+  使用模型：GLM-5.3-Flash
+  功能名称：诗词上图下文卡片（数据来自本地服务器）
+  功能简介：通过 fetch 请求本地数据服务器（node db/server.js，
+            端口 3004）的 /poems 接口，读取 db.json 中 poems 数组的
+            图片 pic、标题 title、内容 content，以"上图下文"卡片
+            网格展示；图片直接用 db.json 里的在线地址，不使用本地照片；
+            服务器未启动时由 catch 分支给出提示，不出现白屏。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诗词上图下文 · 本地服务器数据</title>
+<style>
+  :root {
+    --ssc_ink: #1e293b;
+    --ssc_muted: #64748b;
+    --ssc_paper: #f4f6fb;
+    --ssc_card: #ffffff;
+    --ssc_line: #e2e8f5;
+    --ssc_accent: #18756f;
+    --ssc_accent_dark: #0f4c48;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    color: var(--ssc_ink);
+    background: var(--ssc_paper);
+    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    line-height: 1.8;
+  }
+  .ssc_wrap { width: min(1080px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 60px; }
+  .ssc_head { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 20px; border-bottom: 1px solid var(--ssc_line); }
+  .ssc_head h1 { margin: 0; font-size: 1.7rem; }
+  .ssc_head h1 small { display: block; font-size: .85rem; color: var(--ssc_muted); font-weight: normal; }
+  .ssc_back { flex: none; padding: 9px 18px; border-radius: 999px; background: var(--ssc_accent); color: #fff; font-size: 13.5px; font-weight: bold; text-decoration: none; }
+  .ssc_back:hover { background: var(--ssc_accent_dark); }
+  .ssc_tip { margin: 18px 0 0; padding: 12px 16px; border-radius: 10px; background: #fff7ed; border: 1px solid #fed7aa; color: #b45309; font-size: 14px; }
+  .ssc_tip.ssc_ok { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+  .ssc_grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 24px; }
+  .ssc_card { overflow: hidden; background: var(--ssc_card); border: 1px solid var(--ssc_line); border-radius: 14px; box-shadow: 0 4px 14px rgba(30, 41, 59, .08); transition: transform .2s ease, box-shadow .2s ease; }
+  .ssc_card:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(30, 41, 59, .14); }
+  .ssc_card img { display: block; width: 100%; height: 170px; object-fit: cover; }
+  .ssc_body { padding: 14px 16px 18px; }
+  .ssc_body h2 { margin: 0 0 8px; font-size: 1.1rem; color: var(--ssc_accent_dark); }
+  .ssc_body p { margin: 0; font-size: .92rem; color: var(--ssc_muted); }
+  .ssc_foot { margin-top: 30px; text-align: center; color: #9ca3af; font-size: 13px; }
+  .ssc_empty { grid-column: 1 / -1; margin: 0; padding: 26px 20px; border: 2px dashed #cbd5e1; border-radius: 12px; background: #fff; color: var(--ssc_muted); font-size: 14px; text-align: center; }
+  @media (max-width: 560px) {
+    .ssc_wrap { width: calc(100% - 28px); }
+    .ssc_head { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="ssc_wrap">
+
+  <header class="ssc_head">
+    <h1>诗词上图下文<small>数据来源：db/db.json → node db/server.js（端口 3004）</small></h1>
+    <a class="ssc_back" href="./index.html">← 返回课堂目录</a>
+  </header>
+
+  <p class="ssc_tip" id="sscTip">正在请求 http://localhost:3004/poems ……</p>
+
+  <main class="ssc_grid" id="sscGrid"></main>
+
+  <p class="ssc_foot">孙绍词 · 高级网页设计 · 上图下文 + 本地数据服务器练习</p>
+</div>
+
+<script>
+  // 接口地址：本地数据服务器（node db/server.js 启动，端口 3004）
+  var ssc_apiUrl = 'http://localhost:3004/poems';
+
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-12
+   * 使用模型：DeepSeek-V4.1-Flash
+   * 函数名称：ssc_loadPoems
+   * 功能简介：用 fetch 请求 /poems 接口获取 poems 数组，
+   *           成功后调用 ssc_renderCards 渲染上图下文卡片；
+   *           失败时进入 catch 分支：把提示条改为橙色警示，
+   *           并在卡片区插入文字说明，保证服务器关闭时页面不是白屏
+   */
+  var ssc_loadPoems = function () {
+    fetch(ssc_apiUrl)
+      .then(function (ssc_res) {
+        if (!ssc_res.ok) {
+          throw new Error('HTTP 状态码 ' + ssc_res.status);
+        }
+        return ssc_res.json();
+      })
+      .then(function (ssc_list) {
+        ssc_renderCards(ssc_list);
+      })
+      .catch(function (ssc_err) {
+        // catch 分支：服务器未启动、端口 3004 不通、或接口返回非 200 时执行
+        ssc_showTip('加载失败（' + ssc_err.message + '）：请先在 db 文件夹执行 node server.js 启动数据服务器（端口 3004），再刷新本页。', false);
+        document.getElementById('sscGrid').innerHTML =
+          '<p class="ssc_empty">暂无诗词数据：数据服务器未启动或接口异常。<br>启动方法：打开终端 → 进入 db 文件夹 → 执行 node server.js</p>';
+      });
+  };
+
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-12
+   * 使用模型：GLM-5.3-Flash
+   * 函数名称：ssc_renderCards
+   * 功能简介：遍历 poems 数组，为每条记录生成"上图下文"卡片
+   *           （img 在上，title 与 content 在下），插入 #sscGrid
+   */
+  var ssc_renderCards = function (ssc_list) {
+    var ssc_grid = document.getElementById('sscGrid');
+    var ssc_html = '';
+    for (var i = 0; i < ssc_list.length; i++) {
+      var ssc_item = ssc_list[i];
+      ssc_html += '<article class="ssc_card">'
+        + '<img src="' + ssc_item.pic + '" alt="' + ssc_item.title + '">'
+        + '<div class="ssc_body">'
+        + '<h2>' + ssc_item.title + '</h2>'
+        + '<p>' + ssc_item.content + '</p>'
+        + '</div></article>';
+    }
+    ssc_grid.innerHTML = ssc_html;
+    ssc_showTip('加载成功：共 ' + ssc_list.length + ' 条诗词数据，来自 localhost:3004。', true);
+  };
+
+  /**
+   * 作者：孙绍词
+   * 建立时间：2026-11-12
+   * 使用模型：GLM-5.3-Flash
+   * 函数名称：ssc_showTip
+   * 功能简介：更新顶部提示条文字；ssc_isOk 为 true 时切换为
+   *           绿色成功样式，false 时保持橙色警示样式
+   */
+  var ssc_showTip = function (ssc_text, ssc_isOk) {
+    var ssc_tip = document.getElementById('sscTip');
+    ssc_tip.textContent = ssc_text;
+    if (ssc_isOk) {
+      ssc_tip.classList.add('ssc_ok');
+    } else {
+      ssc_tip.classList.remove('ssc_ok');
+    }
+  };
+
+  // 页面加载完成后立即请求数据
+  ssc_loadPoems();
+</script>
+</body>
+</html>

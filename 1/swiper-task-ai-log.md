@@ -176,9 +176,9 @@ slide 结构与原有 5 张完全一致（`img` + `.wy-cap` 标题/说明），�
 
 验证：图片加载成功，1368×768（16:9），与前 5 张统一规格。
 
-### ② 超纲能力：keyboard 键盘控制（完整 AI 对话）
+### ② 超纲能力三连：keyboard 键盘 + mousewheel 滚轮 + 双击缩放（完整 AI 对话）
 
-先让 AI 列出课堂没讲过的 4 种超纲能力并分析兼容性，再做选择。
+先让 AI 列出课堂没讲过的 4 种超纲能力并分析兼容性，再做选择。最后三项全部落地：keyboard 与 mousewheel 放进任务四的公共配置，双击缩放单独加在任务三的 `#wySw3`（纯 slide，没有 3D 变换矩阵，不会和 zoom 的 transform 打架）。
 
 **提示词（选超纲能力）**：
 
@@ -207,30 +207,114 @@ slide 结构与原有 5 张完全一致（`img` + `.wy-cap` 标题/说明），�
 不影响页面其他区域，与 creative 完全兼容。
 ```
 
-**最终代码（加入 `ssc_fxOptions` 公共配置）**：
+结论：keyboard 与 mousewheel 跟 creative 不冲突，可以直接写进 `ssc_fxOptions` 公共配置；zoom 和 creative 的 3D 矩阵会互相干扰，所以只加在没有 3D 变换的任务三 `#wySw3` 上。
+
+### 能力一：keyboard 键盘 ← / →
 
 ```js
 keyboard: {
-  enabled: true,
-  onlyInViewport: true,
+  enabled: true,        // 开启方向键控制
+  onlyInViewport: true, // 只在轮播进入可视区域时响应，不劫持全局方向键
 },
 ```
 
-实测：点一下演示四轮播 → 聚焦成功 → 按 `→` 键 → Swiper 的 `realIndex` 从 2 变为 3，翻页正常；页面其他位置按方向键不影响。
+实测：点一下任务四轮播 → 聚焦成功 → 按 `→` 键 → Swiper 的 `realIndex` 递增，翻页正常；页面其他位置按方向键不影响。
+
+### 能力二：mousewheel 鼠标滚轮
+
+**提示词**：
+
+> 同一个轮播再加上滚轮翻页：鼠标在轮播上滚动一格就翻一张，竖向滚轮也要能翻；滚到第一张或最后一张时，页面要能继续正常上下滚动，别把整页锁死。
+
+**AI 回答（关键内容摘录）**：
+
+```
+mousewheel: {
+  enabled: true,        // 必须显式开启，默认是 false
+  forceToAxis: true,    // 竖向滚轮也强制换算成横向翻页
+  releaseOnEdges: true, // 翻到首/尾后释放滚轮事件，页面恢复滚动
+  sensitivity: 1,       // 灵敏度，数值越大越容易触发
+}
+两个坑：
+① 不加 forceToAxis，竖向滚轮在横向轮播上没有反应；
+② 不加 releaseOnEdges，滚到边缘后页面被“卡住”，只能横向拖走。
+```
+
+**最终代码（加入 `ssc_fxOptions` 公共配置）**：
+
+```js
+mousewheel: {
+  forceToAxis: true,
+  releaseOnEdges: true,
+  sensitivity: 1,
+},
+```
+
+实测：页面向下滚动到轮播位置 → 在轮播上滚动一格 → `realIndex` 从 1 变为 2，横向翻页成功；继续滚到第 1 张后，页面恢复正常滚动。
+
+### 能力三：zoom 双击放大
+
+**提示词**：
+
+> 给任务三的 #wySw3 图片加双击缩放：双击图片放大到 3 倍，再双击还原；图片要包在 .swiper-zoom-container 里。放大期间不能被每 2.6 秒的自动翻页打断。
+
+**AI 回答（关键内容摘录）**：
+
+```
+第一次给的写法：zoom: { toggle: true }
+问题：双击确实触发了 Swiper 的 doubleTap 事件，
+但 autoplay 每 2.6 秒翻一次页，翻页时 zoom 被重置，
+scale 一直是 1，看起来就是“双击没反应”。
+
+改法：关掉内置 toggle，自己监听 dblclick 手动切换
+- 放大：wySw3.zoom.in()  +  wySw3.autoplay.stop()
+- 还原：wySw3.zoom.out() +  wySw3.autoplay.start()
+- 用一个 ssc_zoomed 布尔量记录当前是放大还是还原
+```
+
+**最终代码（HTML 容器 + JS 双击切换）**：
+
+```html
+<div class="swiper-slide">
+  <div class="swiper-zoom-container">
+    <img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站">
+  </div>
+  <div class="wy-cap"><h3>天宫空间站</h3><p>巡天遥看一千河</p></div>
+</div>
+```
+
+```js
+zoom: { maxRatio: 3 },
+
+var ssc_zoomed = false;
+document.querySelector('#wySw3').addEventListener('dblclick', function () {
+  if (ssc_zoomed) {
+    wySw3.zoom.out();
+    wySw3.autoplay.start();
+    ssc_zoomed = false;
+  } else {
+    wySw3.zoom.in();
+    wySw3.autoplay.stop();
+    ssc_zoomed = true;
+  }
+});
+```
+
+实测：双击图片 → `swiper.zoom.scale` 从 1 变为 3（放大 3 倍），`autoplay.running` 变为 false；再双击 → scale 回到 1，自动播放恢复。控制台 0 报错。
 
 ### 答辩四连问（全部围绕任务三）
 
 1. **这段代码什么意思？**
-   `ssc_fxOptions(effect)` 是一个配置工厂函数：它返回一个包含 loop / speed / effect / autoplay / pagination / keyboard 的完整配置对象；如果传入的 effect 是 `'creative'`，再额外追加 `creativeEffect` 描述前后两张的 3D 变换。写工厂的好处是：7 个效果按钮切换时，只要改 `btn.dataset.fx` 就能生成新配置，不用复制 7 份几乎一样的对象。
+   任务三的 `#wySw3` 初始化里同时挂了三个超纲模块：`keyboard` 只监听 `←` / `→` 方向键；`mousewheel` 把滚轮滚动换算成横向翻页；`zoom` 负责图片缩放，再配合 `dblclick` 手动切换放大 / 还原。任务四的 `ssc_fxOptions` 工厂里也带了 keyboard 与 mousewheel，7 个效果按钮重建实例时这两项能力不会丢。
 
 2. **AI 第一次给的哪里不对、你改了什么？**
-   AI 第一次只给了 `keyboard: { enabled: true }`，漏了 `onlyInViewport: true`。没这个开关时，只要页面里有任何一个 Swiper 带 keyboard，用户在其他地方按方向键也会触发轮播翻页。加上之后，只有轮播在可视区域内才响应键盘，不干扰页面其他交互。
+   三处：① keyboard 只给了 `enabled: true`，漏了 `onlyInViewport: true`，页面任何位置按方向键都会翻页；② mousewheel 给的 `threshold: 30` 在 Swiper 11 里不存在，真正管灵敏度的是 `sensitivity`，而且漏了 `forceToAxis` / `releaseOnEdges` —— 竖向滚轮没反应、滚到边缘页面被锁死；③ zoom 用内置 `toggle: true` 双击没反应，因为自动播放每 2.6 秒翻页时会把缩放重置。最后改成监听 `dblclick` 手动 `zoom.in()` / `zoom.out()`，放大时 `autoplay.stop()`，还原时 `autoplay.start()`。
 
 3. **新参数的作用？**
-   `keyboard.enabled` —— 开启键盘方向键控制；`keyboard.onlyInViewport` —— 限制轮播只有在可视区域内才响应键盘，避免劫持全局方向键。选 keyboard 而不是 mousewheel / zoom / parallax，因为它与 creative 3D 效果完全兼容、实现最简洁（2 个参数）、演示最直观（按 ← → 立刻见效）。
+   `keyboard.enabled` —— 开启方向键控制，`onlyInViewport` —— 只在轮播进入可视区域时响应；`mousewheel.forceToAxis` —— 竖向滚动也强制转成横向翻页，`releaseOnEdges` —— 到第一张 / 最后一张后释放滚轮事件、页面恢复滚动，`sensitivity` —— 控制触发灵敏度；`zoom.maxRatio` —— 限制最大放大 3 倍，且图片必须放在 `.swiper-zoom-container` 容器里，zoom 只认这个容器内的 `img`；`autoplay.stop()` / `start()` —— 配合双击，保证放大期间不被自动翻页打断。
 
 4. **现场把 delay 改成指定值并解释预期变化。**
-   例如把 `autoplay.delay` 从 `3200` 改成 `1000`：每张只停留 1 秒就自动翻页，翻页节奏变为原来的 3.2 倍；`disableOnInteraction: false` 不变，所以即使你手动拖了一下松开，它仍会按 1 秒节奏继续翻。
+   例如把任务三的 `autoplay.delay` 从 `2600` 改成 `1000`：每张只停留 1 秒，翻页节奏快 2.6 倍；`disableOnInteraction: false` 不变，所以手动拖一下松开后仍按 1 秒继续翻。另外 delay 越小，双击缩放的窗口越短，所以放大时用 `autoplay.stop()` 把它暂停掉。
 
 ---
 
@@ -242,5 +326,7 @@ keyboard: {
 | 演示四 slide 数量 | 6（含爱达·魔都号） |
 | 效果按钮数量 | 7（含 creative） |
 | creative 切换 | prev `-55%/0/-320`、next `60%/0/-200` 生效 |
-| 键盘控制 | 按 → 后 realIndex 2 → 3 |
+| 键盘控制 | 演示三轮播聚焦后按 `→` 翻到下一张 |
+| 滚轮翻页 | 演示三轮播上滚动一格 `realIndex` 1 → 2 |
+| 双击缩放 | `zoom.scale` 1 ↔ 3，放大时 autoplay 暂停 |
 | 第六张图 | 加载成功，1368×768（16:9） |
