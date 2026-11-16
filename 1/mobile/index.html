@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-16
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：移动端四个任务的入口页
+  功能简介：把任务一到任务四整合成一个目录，手机打开本页即可点进任意任务。
+            每个任务一个卡片，写明名称与一句话介绍；点击跳转到对应页面。
+            前缀按项目约定用 ssc_。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端触摸交互 · 四个任务目录</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    background: #f2f5fa; color: #1f2937;
+  }
+  .ssc_page { max-width: 520px; margin: 0 auto; padding: 18px 16px 44px; }
+
+  .ssc_head {
+    background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+    border-radius: 18px; padding: 24px 20px; color: #fff;
+    box-shadow: 0 10px 24px rgba(15, 43, 91, .28);
+  }
+  .ssc_head span { font-size: 12px; letter-spacing: 2px; color: #ffd166; }
+  .ssc_head h1 { font-size: 24px; margin-top: 8px; line-height: 1.4; }
+  .ssc_head p { font-size: 13px; color: #d9e3f5; line-height: 1.9; margin-top: 10px; }
+
+  .ssc_tip {
+    margin-top: 14px; background: #fff7e6; border: 1px solid #fde68a;
+    border-radius: 12px; padding: 12px 16px; font-size: 13px; color: #92400e; line-height: 1.8;
+  }
+
+  .ssc_list { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .ssc_card {
+    display: block; text-decoration: none; color: inherit;
+    background: #fff; border: 1px solid #e8ecf5; border-radius: 16px;
+    padding: 18px 18px 18px 20px;
+    box-shadow: 0 6px 18px rgba(15, 43, 91, .06);
+    position: relative; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .ssc_card:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(15, 43, 91, .1); }
+  .ssc_no {
+    position: absolute; left: -8px; top: 16px;
+    width: 30px; height: 30px; border-radius: 9px;
+    background: linear-gradient(135deg, #0f2b5b, #1d5bbf); color: #fff;
+    font-family: Georgia, serif; font-size: 14px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ssc_card h3 { font-size: 16px; color: #0f2b5b; margin-bottom: 4px; }
+  .ssc_card p { font-size: 13px; color: #64748b; line-height: 1.7; }
+  .ssc_card .ssc_go {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    color: #1d5bbf; font-size: 18px; font-weight: bold;
+  }
+  .ssc_card .ssc_tag {
+    display: inline-block; font-size: 11px; color: #1d4ed8;
+    background: #eef2ff; padding: 2px 8px; border-radius: 999px;
+    margin-top: 8px;
+  }
+
+  .ssc_foot {
+    margin-top: 20px; text-align: center; font-size: 12px; color: #94a3b8;
+  }
+  .ssc_foot a { color: #1d5bbf; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="ssc_page">
+
+  <header class="ssc_head">
+    <span>移动端 · 触摸交互</span>
+    <h1>按下 · 滑动 · 缩放 · 摇一摇</h1>
+    <p>这是四个递进任务的目录页。请在手机上打开，点进任意任务即可体验对应功能。</p>
+  </header>
+
+  <div class="ssc_tip">
+    💡 任务一观察事件，任务二学手势识别，任务三做多指缩放，任务四用传感器。建议按顺序做。
+  </div>
+
+  <div class="ssc_list">
+
+    <a class="ssc_card" href="./mobile-touch-probe.html">
+      <div class="ssc_no">一</div>
+      <h3>事件侦探 · 触摸观察台</h3>
+      <p>单击、拖动、双指、长按，实时看清 touchstart / touchmove / touchend / click 的顺序与次数。</p>
+      <span class="ssc_tag">观察 · 不写业务逻辑</span>
+      <span class="ssc_go">→</span>
+    </a>
+
+    <a class="ssc_card" href="./mobile-gesture.html">
+      <div class="ssc_no">二</div>
+      <h3>中华美食 · 手势卡片</h3>
+      <p>左右滑动切换四道菜，40px 阈值、首尾提示、0.3s 过渡、防连滑跳张。</p>
+      <span class="ssc_tag">touchstart / touchend</span>
+      <span class="ssc_go">→</span>
+    </a>
+
+    <a class="ssc_card" href="./mobile-zoom.html">
+      <div class="ssc_no">三</div>
+      <h3>图片查看器 · 双指缩放</h3>
+      <p>双指 1x～4x 缩放（以两指中点为基准），双击 1x/2x 切换，放大后可拖动并限制边界。</p>
+      <span class="ssc_tag">多点触控 · transform</span>
+      <span class="ssc_go">→</span>
+    </a>
+
+    <a class="ssc_card" href="./mobile-sensor.html">
+      <div class="ssc_no">四</div>
+      <h3>摇一摇 · 抽今日菜谱</h3>
+      <p>devicemotion 合成加速度阈值 18、1.5s 冷却，iOS 权限申请 + 无传感器降级按钮。</p>
+      <span class="ssc_tag">设备传感器 · 降级设计</span>
+      <span class="ssc_go">→</span>
+    </a>
+
+  </div>
+
+  <p class="ssc_foot">
+    <a href="../index.html">← 返回课堂目录</a>
+  </p>
+</div>
+</body>
+</html>
