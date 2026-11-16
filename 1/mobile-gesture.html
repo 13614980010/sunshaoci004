@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-16
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：任务二 · 中华美食手势卡片（左右滑动切换）
+  功能简介：监听 touchstart / touchend，用 changedTouches[0] 计算横向位移，
+            40px 阈值判断是否为滑动，左滑下一张、右滑上一张；首尾给出提示，
+            切换带 0.3s 过渡，动画期间锁定防连滑跳张；卡片容器 touch-action:pan-y，
+            保证页面纵向仍可滚动。命名前缀按项目约定用 ssc_（课程示例中的 wy_）。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务二 · 手势卡片 | 中华美食</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    background: #f2f5fa; color: #1f2937;
+  }
+  .ssc_page { max-width: 480px; margin: 0 auto; padding: 18px 16px 44px; }
+
+  .ssc_back { display: inline-block; font-size: 13px; color: #0f2b5b; text-decoration: none; margin-bottom: 14px; }
+  .ssc_back::before { content: "← "; }
+
+  .ssc_head {
+    background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+    border-radius: 18px; padding: 22px 20px; color: #fff;
+    box-shadow: 0 10px 24px rgba(15, 43, 91, .28);
+  }
+  .ssc_head span { font-size: 12px; letter-spacing: 2px; color: #ffd166; }
+  .ssc_head h1 { font-size: 22px; margin-top: 8px; letter-spacing: 1px; }
+  .ssc_head p { font-size: 13px; color: #d9e3f5; line-height: 1.9; margin-top: 8px; }
+
+  /* 卡片区：pan-y 只把横向手势交给自己，纵向仍归浏览器滚动 */
+  .ssc_cardwrap {
+    position: relative; height: 320px; margin-top: 18px;
+    border-radius: 18px; overflow: hidden; background: #fff;
+    box-shadow: 0 10px 26px rgba(15, 43, 91, .16);
+    touch-action: pan-y; user-select: none; -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .ssc_card {
+    position: absolute; inset: 0; padding: 22px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    color: #fff; opacity: 1; transform: translateX(0);
+  }
+  .ssc_card::after {
+    content: attr(data-no);
+    position: absolute; right: 16px; top: 6px;
+    font-size: 72px; font-weight: bold; color: rgba(255, 255, 255, .16);
+    letter-spacing: 2px;
+  }
+  .ssc_card b { font-size: 12px; letter-spacing: 3px; color: rgba(255, 255, 255, .8); }
+  .ssc_card h2 { font-size: 26px; margin: 6px 0 8px; letter-spacing: 1px; }
+  .ssc_card p { font-size: 13.5px; line-height: 1.9; color: rgba(255, 255, 255, .9); }
+
+  .ssc_bar { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+  .ssc_bar span { font-size: 14px; color: #475569; }
+  .ssc_bar span b { color: #0f2b5b; }
+  .ssc_hint { font-size: 12px; color: #94a3b8; }
+
+  .ssc_tip {
+    margin-top: 12px; min-height: 40px; padding: 10px 14px;
+    border-radius: 10px; font-size: 13px; line-height: 1.6;
+    background: #fff7e6; border: 1px solid #fde68a; color: #92400e;
+    opacity: 0; transition: opacity .2s;
+  }
+  .ssc_tip.ssc_show { opacity: 1; }
+
+  .ssc_note {
+    margin-top: 18px; background: #fff; border: 1px solid #e8ecf5;
+    border-radius: 14px; padding: 16px 18px; font-size: 13px; color: #475569; line-height: 2;
+  }
+  .ssc_note h3 { font-size: 14px; color: #0f2b5b; margin-bottom: 6px; }
+  .ssc_note code { background: #eef2ff; color: #1d4ed8; padding: 1px 6px; border-radius: 5px; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="ssc_page">
+  <a class="ssc_back" href="./index.html">返回课堂目录</a>
+
+  <header class="ssc_head">
+    <span>任务二 · 手势识别</span>
+    <h1>中华美食 · 手势卡片</h1>
+    <p>在卡片上左右滑动切换菜品。请在手机上打开，或使用浏览器设备模式（F12 → 切换设备工具栏）。</p>
+  </header>
+
+  <div class="ssc_cardwrap" id="sscCardWrap">
+    <article class="ssc_card" id="sscCard" data-no="01">
+      <b>川菜 · 糊辣荔枝味</b>
+      <h2>宫保鸡丁</h2>
+      <p>鸡丁滑嫩、花生酥脆，干辣椒与花椒炒出糊辣香，酸甜收口，是最经典的下饭菜之一。</p>
+    </article>
+  </div>
+
+  <div class="ssc_bar">
+    <span>第 <b id="sscCount">1</b>/4 张</span>
+    <span class="ssc_hint">左滑下一张 · 右滑上一张</span>
+  </div>
+
+  <div class="ssc_tip" id="sscTip">滑动试试：阈值 40px，短距离误触不会切换。</div>
+
+  <section class="ssc_note">
+    <h3>实现要点</h3>
+    <p>① <code>touchstart</code> 记起点，<code>touchend</code> 用 <code>changedTouches[0]</code> 算横向位移（抬手时 <code>touches</code> 里已没有这根手指）。</p>
+    <p>② 阈值 <code>40px</code>，且横向位移要大于纵向位移，才判定为左右滑动，避免误触与斜滑。</p>
+    <p>③ 首尾边界只弹提示不切换；动画期间锁定，防止一次连滑跳两张。</p>
+    <p>④ 卡片容器 <code>touch-action: pan-y</code>：横向手势归本页，纵向仍交给浏览器滚动。</p>
+  </section>
+</div>
+
+<script>
+/**
+ * 作者：孙绍词
+ * 建立时间：2026-11-16
+ * 使用模型：DeepSeek-V4.1-Flash
+ * 数据：4 道中华美食的菜名、简介、渐变背景与序号
+ */
+var ssc_dishes = [
+  { name: '宫保鸡丁', desc: '鸡丁滑嫩、花生酥脆，干辣椒与花椒炒出糊辣香，酸甜收口，是最经典的下饭菜之一。', tag: '川菜 · 糊辣荔枝味', bg: 'linear-gradient(135deg, #b45309, #7c2d12)', no: '01' },
+  { name: '麻婆豆腐', desc: '嫩豆腐配牛肉臊子，豆瓣与花椒面提香，麻辣鲜香烫，一勺就能拌下一碗米饭。', tag: '川菜 · 麻辣鲜香', bg: 'linear-gradient(135deg, #c2410c, #7f1d1d)', no: '02' },
+  { name: '松鼠鳜鱼', desc: '鳜鱼改花刀炸至酥松，浇上酸甜番茄汁，外脆里嫩，形似松鼠、声如松鼠。', tag: '苏菜 · 酸甜酥脆', bg: 'linear-gradient(135deg, #b91c1c, #6b1010)', no: '03' },
+  { name: '北京烤鸭', desc: '果木炭火烤制，鸭皮酥脆透亮，片成薄片卷荷叶饼，配甜面酱与葱丝黄瓜条。', tag: '京菜 · 皮酥肉嫩', bg: 'linear-gradient(135deg, #a16207, #713f12)', no: '04' }
+];
+
+var ssc_cardWrap = document.getElementById('sscCardWrap');
+var ssc_card = document.getElementById('sscCard');
+var ssc_count = document.getElementById('sscCount');
+var ssc_tip = document.getElementById('sscTip');
+
+var ssc_index = 0;        // 当前第几张（0 起）
+var ssc_startX = 0;       // 按下时的横坐标
+var ssc_startY = 0;       // 按下时的纵坐标
+var ssc_locked = false;   // 动画锁：切换过程中忽略新的手势
+var ssc_line = 40;        // 滑动阈值 40px
+var ssc_tipTimer = null;
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_paint
+ * 功能简介：把第 i 道菜的菜名、简介、标签、渐变背景与序号写到卡片上
+ */
+var ssc_paint = function (ssc_i) {
+  var ssc_d = ssc_dishes[ssc_i];
+  ssc_card.style.background = ssc_d.bg;
+  ssc_card.setAttribute('data-no', ssc_d.no);
+  ssc_card.innerHTML = '<b>' + ssc_d.tag + '</b><h2>' + ssc_d.name + '</h2><p>' + ssc_d.desc + '</p>';
+  ssc_count.textContent = ssc_i + 1;
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_showTip
+ * 功能简介：底部提示条显示文字，2 秒后自动淡出
+ */
+var ssc_showTip = function (ssc_text) {
+  ssc_tip.textContent = ssc_text;
+  ssc_tip.classList.add('ssc_show');
+  clearTimeout(ssc_tipTimer);
+  ssc_tipTimer = setTimeout(function () {
+    ssc_tip.classList.remove('ssc_show');
+  }, 2000);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_switch
+ * 功能简介：按方向切换卡片。ssc_dir 为 1 下一张、-1 上一张；
+ *           越界只提示；切换先出场 0.3s，再换内容入场 0.3s，全程加锁防连滑跳张
+ */
+var ssc_switch = function (ssc_dir) {
+  if (ssc_locked) return;                       // 动画未结束，忽略新手势
+  var ssc_next = ssc_index + ssc_dir;
+
+  if (ssc_next < 0) { ssc_showTip('已经是第一张，右滑到头了'); return; }
+  if (ssc_next > ssc_dishes.length - 1) { ssc_showTip('已经是最后一张，左滑到头了'); return; }
+
+  ssc_locked = true;
+  ssc_index = ssc_next;
+
+  // ① 出场：0.3s 移出
+  ssc_card.style.transition = 'transform .3s ease, opacity .3s ease';
+  ssc_card.style.transform = 'translateX(' + (ssc_dir > 0 ? '-100%' : '100%') + ')';
+  ssc_card.style.opacity = '0';
+
+  setTimeout(function () {
+    ssc_paint(ssc_index);
+    // ② 无过渡地把新卡片放到另一侧
+    ssc_card.style.transition = 'none';
+    ssc_card.style.transform = 'translateX(' + (ssc_dir > 0 ? '100%' : '-100%') + ')';
+    void ssc_card.offsetWidth;                  // 强制重排，让下一次过渡生效
+    // ③ 入场：0.3s 滑回原位
+    ssc_card.style.transition = 'transform .3s ease, opacity .3s ease';
+    ssc_card.style.transform = 'translateX(0)';
+    ssc_card.style.opacity = '1';
+
+    setTimeout(function () { ssc_locked = false; }, 300);
+  }, 300);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchStart
+ * 功能简介：记录手指按下的起点坐标，passive 不阻塞滚动
+ */
+var ssc_onTouchStart = function (ssc_e) {
+  var ssc_t = ssc_e.touches[0];
+  ssc_startX = ssc_t.clientX;
+  ssc_startY = ssc_t.clientY;
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchEnd
+ * 功能简介：抬手时取 changedTouches[0] 计算位移；
+ *           先过阈值，再比横纵位移决定方向，最后交给 ssc_switch 切换
+ */
+var ssc_onTouchEnd = function (ssc_e) {
+  var ssc_t = ssc_e.changedTouches[0];
+  var ssc_dx = ssc_t.clientX - ssc_startX;
+  var ssc_dy = ssc_t.clientY - ssc_startY;
+
+  // 位移不足阈值：判为误触（点击、抖动）
+  if (Math.abs(ssc_dx) < ssc_line || Math.abs(ssc_dx) < Math.abs(ssc_dy)) return;
+
+  ssc_switch(ssc_dx < 0 ? 1 : -1);              // 左滑为负 → 下一张
+};
+
+ssc_cardWrap.addEventListener('touchstart', ssc_onTouchStart, { passive: true });
+ssc_cardWrap.addEventListener('touchend', ssc_onTouchEnd, { passive: true });
+
+// 被来电、通知打断时重置起点，避免下一次滑动拿到旧坐标
+ssc_cardWrap.addEventListener('touchcancel', function () {
+  ssc_startX = 0;
+  ssc_startY = 0;
+  ssc_locked = false;
+});
+
+ssc_paint(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-16
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：任务三 · 移动端图片查看器（双指缩放 + 双击放大 + 拖动）
+  功能简介：容器 overflow:hidden、touch-action:none，图片用 transform 做
+            translate + scale；双指按两指间距比例缩放到 1x～4x，并以两指中点为
+            缩放基准保证图片不跳；放大后单指拖动，松手限制在边界内；
+            双击在 1x / 2x 之间切换（0.25s 过渡）；缩回 1x 自动居中；
+            旋转屏幕重新测量基准尺寸但不丢缩放状态。前缀按项目约定用 ssc_。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务三 · 图片查看器 | 中国天眼</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; background: #f2f5fa; color: #1f2937; }
+  .ssc_page { max-width: 520px; margin: 0 auto; padding: 18px 16px 44px; }
+
+  .ssc_back { display: inline-block; font-size: 13px; color: #0f2b5b; text-decoration: none; margin-bottom: 14px; }
+  .ssc_back::before { content: "← "; }
+
+  .ssc_head {
+    background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+    border-radius: 18px; padding: 22px 20px; color: #fff;
+    box-shadow: 0 10px 24px rgba(15, 43, 91, .28);
+  }
+  .ssc_head span { font-size: 12px; letter-spacing: 2px; color: #ffd166; }
+  .ssc_head h1 { font-size: 22px; margin-top: 8px; }
+  .ssc_head p { font-size: 13px; color: #d9e3f5; line-height: 1.9; margin-top: 8px; }
+  .ssc_head strong { color: #ffd166; }
+
+  /* 舞台：手势全部交给自己，浏览器不滚动、不缩放页面 */
+  .ssc_stage {
+    position: relative; height: 58vh; min-height: 280px; margin-top: 16px;
+    background: #0b1220; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 12px 28px rgba(11, 18, 32, .28);
+    touch-action: none; user-select: none; -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .ssc_img {
+    position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+    object-fit: contain; transform-origin: center center;
+    transform: translate3d(0, 0, 0) scale(1);
+    will-change: transform;
+  }
+  .ssc_stage::after {
+    content: "双指缩放 · 双击 1x/2x · 放大后拖动";
+    position: absolute; left: 0; right: 0; bottom: 10px;
+    text-align: center; font-size: 12px; color: rgba(255, 255, 255, .55);
+    pointer-events: none;
+  }
+
+  .ssc_bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; font-size: 13.5px; color: #475569;
+  }
+  .ssc_bar b { color: #0f2b5b; font-size: 16px; }
+
+  .ssc_note {
+    margin-top: 16px; background: #fff; border: 1px solid #e8ecf5;
+    border-radius: 14px; padding: 16px 18px; font-size: 13px; color: #475569; line-height: 2;
+  }
+  .ssc_note h3 { font-size: 14px; color: #0f2b5b; margin-bottom: 6px; }
+  .ssc_note code { background: #eef2ff; color: #1d4ed8; padding: 1px 6px; border-radius: 5px; font-size: 12.5px; }
+  .ssc_note em { font-style: normal; color: #b45309; }
+</style>
+</head>
+<body>
+<div class="ssc_page">
+  <a class="ssc_back" href="./index.html">返回课堂目录</a>
+
+  <header class="ssc_head">
+    <span>任务三 · 多指手势</span>
+    <h1>图片查看器 · 中国天眼</h1>
+    <p><strong>双指缩放请用手机打开</strong>；电脑上可用设备模式，按住 Alt 拖动模拟双指。</p>
+  </header>
+
+  <div class="ssc_stage" id="sscStage">
+    <img class="ssc_img" id="sscImg" src="swiper-imgs/fast_1.jpg" alt="中国天眼 FAST 全景">
+  </div>
+
+  <div class="ssc_bar">
+    <span>当前缩放：<b id="sscScale">1.00x</b></span>
+    <span>范围 1x ～ 4x</span>
+  </div>
+
+  <section class="ssc_note">
+    <h3>“缩放不跳”是怎么保证的</h3>
+    <p>缩放不是改 <code>width</code>，而是改 <code>transform: translate(...) scale(...)</code>，配合 <code>transform-origin: center</code>，浏览器只做合成，跟手且不重排。</p>
+    <p>设容器中心为原点，图片点 <code>u</code> 的屏幕位置是 <code>p = 中心 + t + s · u</code>。要以两指中点 <code>c</code> 为基准把倍数从 <code>s</code> 变到 <code>s2</code>，反解出新的位移：</p>
+    <p><code>t2 = (c − 中心) − (s2 / s) × [(c − 中心) − t]</code></p>
+    <p>这样 <em>c 点下方的那块画面缩放前后不动</em>，所以图片不会“跳走”。</p>
+    <p>边界：按 <code>object-fit: contain</code> 后的实际显示尺寸算出最大位移，拖动与缩放都夹在 <code>±maxX / ±maxY</code> 内；<code>scale</code> 夹在 1～4，回到 1x 时位移归零，自动居中。</p>
+  </section>
+</div>
+
+<script>
+/**
+ * 作者：孙绍词
+ * 建立时间：2026-11-16
+ * 使用模型：DeepSeek-V4.1-Flash
+ * 变量说明：
+ *   ssc_scale     当前总倍数（1～4）
+ *   ssc_tx/ssc_ty 当前位移（相对容器中心，单位 px）
+ *   ssc_baseW/H   图片在 object-fit:contain 下的实际显示宽高
+ *   ssc_lastDist  上一帧两指距离，用来算“本帧比例”
+ *   ssc_pinching  是否处于双指状态
+ *   ssc_dragging  是否处于单指拖动
+ *   ssc_moved     本次触摸是否发生过位移（用于区分双击与拖动）
+ *   ssc_lastTap   上一次单击结束的时间戳（300ms 内算双击）
+ */
+var ssc_stage = document.getElementById('sscStage');
+var ssc_img = document.getElementById('sscImg');
+var ssc_scaleEl = document.getElementById('sscScale');
+
+var ssc_scale = 1;
+var ssc_tx = 0;
+var ssc_ty = 0;
+var ssc_baseW = 0;
+var ssc_baseH = 0;
+
+var ssc_lastDist = 0;
+var ssc_pinching = false;
+var ssc_dragging = false;
+var ssc_startX = 0;
+var ssc_startY = 0;
+var ssc_startTx = 0;
+var ssc_startTy = 0;
+var ssc_moved = false;
+var ssc_lastTap = 0;
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_dist
+ * 功能简介：算两根手指的直线距离（勾股定理）
+ */
+var ssc_dist = function (ssc_t1, ssc_t2) {
+  return Math.hypot(ssc_t2.clientX - ssc_t1.clientX, ssc_t2.clientY - ssc_t1.clientY);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_mid
+ * 功能简介：取两指中点，并换算成相对容器左上角的坐标（缩放基准点）
+ */
+var ssc_mid = function (ssc_t1, ssc_t2) {
+  var ssc_rect = ssc_stage.getBoundingClientRect();
+  return {
+    x: (ssc_t1.clientX + ssc_t2.clientX) / 2 - ssc_rect.left,
+    y: (ssc_t1.clientY + ssc_t2.clientY) / 2 - ssc_rect.top
+  };
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_apply
+ * 功能简介：把 ssc_tx / ssc_ty / ssc_scale 写到 transform 上；
+ *           ssc_animated 为 true 时带 0.25s 过渡（双击、松手回弹用）
+ */
+var ssc_apply = function (ssc_animated) {
+  ssc_img.style.transition = ssc_animated ? 'transform .25s ease' : 'none';
+  ssc_img.style.transform = 'translate3d(' + ssc_tx + 'px,' + ssc_ty + 'px,0) scale(' + ssc_scale + ')';
+  ssc_scaleEl.textContent = ssc_scale.toFixed(2) + 'x';
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_clamp
+ * 功能简介：按当前倍数限制位移，防止把图片拖出容器；
+ *           倍数为 1 时 maxX / maxY 为 0，位移自动归零即居中
+ */
+var ssc_clamp = function (ssc_animated) {
+  var ssc_maxX = Math.max(0, (ssc_baseW * ssc_scale - ssc_stage.clientWidth) / 2);
+  var ssc_maxY = Math.max(0, (ssc_baseH * ssc_scale - ssc_stage.clientHeight) / 2);
+  ssc_tx = Math.min(ssc_maxX, Math.max(-ssc_maxX, ssc_tx));
+  ssc_ty = Math.min(ssc_maxY, Math.max(-ssc_maxY, ssc_ty));
+  ssc_apply(ssc_animated);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_zoomAt
+ * 功能简介：以容器内某点 (cx, cy) 为基准缩放到 ssc_target 倍。
+ *           公式：t2 = (c − 中心) − k × [(c − 中心) − t]，k = 新倍数 / 旧倍数；
+ *           这样基准点下方的画面缩放前后保持不动，图片不会跳。
+ */
+var ssc_zoomAt = function (ssc_cx, ssc_cy, ssc_target, ssc_animated) {
+  ssc_target = Math.min(4, Math.max(1, ssc_target));
+  var ssc_cw = ssc_stage.clientWidth / 2;
+  var ssc_ch = ssc_stage.clientHeight / 2;
+  var ssc_k = ssc_target / ssc_scale;
+
+  ssc_tx = (ssc_cx - ssc_cw) - ssc_k * ((ssc_cx - ssc_cw) - ssc_tx);
+  ssc_ty = (ssc_cy - ssc_ch) - ssc_k * ((ssc_cy - ssc_ch) - ssc_ty);
+  ssc_scale = ssc_target;
+
+  ssc_clamp(ssc_animated);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_measure
+ * 功能简介：算出 object-fit:contain 后图片真实的显示宽高（缩放、边界都用它），
+ *           横竖屏切换后重新计算，但保留当前缩放倍数与位移状态
+ */
+var ssc_measure = function () {
+  var ssc_cw = ssc_stage.clientWidth;
+  var ssc_ch = ssc_stage.clientHeight;
+  var ssc_iw = ssc_img.naturalWidth || 1;
+  var ssc_ih = ssc_img.naturalHeight || 1;
+  var ssc_k = Math.min(ssc_cw / ssc_iw, ssc_ch / ssc_ih);
+
+  ssc_baseW = ssc_iw * ssc_k;
+  ssc_baseH = ssc_ih * ssc_k;
+  ssc_clamp(false);
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchStart
+ * 功能简介：双指时记录初始间距并进入捏合；单指时记录拖动起点
+ */
+var ssc_onTouchStart = function (ssc_e) {
+  ssc_moved = false;
+
+  if (ssc_e.touches.length >= 2) {
+    ssc_pinching = true;
+    ssc_dragging = false;
+    ssc_lastDist = ssc_dist(ssc_e.touches[0], ssc_e.touches[1]);  // 清空上一轮残留
+    ssc_moved = true;
+    return;
+  }
+
+  ssc_pinching = false;
+  ssc_dragging = true;
+  ssc_startX = ssc_e.touches[0].clientX;
+  ssc_startY = ssc_e.touches[0].clientY;
+  ssc_startTx = ssc_tx;
+  ssc_startTy = ssc_ty;
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchMove
+ * 功能简介：双指按“本帧距离 / 上一帧距离”的比例缩放，基准取当前两指中点；
+ *           单指且已放大时拖动图片，并实时夹在边界内
+ */
+var ssc_onTouchMove = function (ssc_e) {
+  if (ssc_e.touches.length >= 2) {
+    if (ssc_e.cancelable) ssc_e.preventDefault();   // 阻止整页缩放、回弹
+    var ssc_d = ssc_dist(ssc_e.touches[0], ssc_e.touches[1]);
+    if (ssc_lastDist > 0) {
+      var ssc_midPoint = ssc_mid(ssc_e.touches[0], ssc_e.touches[1]);
+      ssc_zoomAt(ssc_midPoint.x, ssc_midPoint.y, ssc_scale * (ssc_d / ssc_lastDist), false);
+    }
+    ssc_lastDist = ssc_d;
+    ssc_moved = true;
+    return;
+  }
+
+  if (!ssc_dragging || ssc_scale <= 1) return;
+
+  if (ssc_e.cancelable) ssc_e.preventDefault();
+  var ssc_dx = ssc_e.touches[0].clientX - ssc_startX;
+  var ssc_dy = ssc_e.touches[0].clientY - ssc_startY;
+  if (Math.abs(ssc_dx) > 5 || Math.abs(ssc_dy) > 5) ssc_moved = true;
+
+  ssc_tx = ssc_startTx + ssc_dx;
+  ssc_ty = ssc_startTy + ssc_dy;
+  ssc_clamp(false);                                 // 拖动过程中就限制，手感不“飘”
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchEnd
+ * 功能简介：手指全部抬起后收尾：清双指状态、夹回边界；
+ *           若本次没有位移，则按 300ms 间隔判断双击，在 1x / 2x 间切换
+ */
+var ssc_onTouchEnd = function (ssc_e) {
+  if (ssc_e.touches.length > 0) return;             // 还有手指没抬起，先不收尾
+
+  ssc_pinching = false;
+  ssc_dragging = false;
+  ssc_lastDist = 0;
+
+  if (!ssc_moved) {
+    var ssc_now = Date.now();
+    if (ssc_now - ssc_lastTap < 300) {
+      // 双击：以点击位置为基准，1x ↔ 2x
+      var ssc_t = ssc_e.changedTouches[0];
+      var ssc_rect = ssc_stage.getBoundingClientRect();
+      var ssc_target = ssc_scale > 1.1 ? 1 : 2;
+      ssc_zoomAt(ssc_t.clientX - ssc_rect.left, ssc_t.clientY - ssc_rect.top, ssc_target, true);
+      ssc_lastTap = 0;
+    } else {
+      ssc_lastTap = ssc_now;
+    }
+  }
+
+  if (ssc_scale <= 1) {                             // 回到 1x：归零即自动居中
+    ssc_scale = 1;
+    ssc_tx = 0;
+    ssc_ty = 0;
+    ssc_apply(true);
+  } else {
+    ssc_clamp(true);
+  }
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_onTouchCancel
+ * 功能简介：被来电、通知打断时清掉手势状态，避免图片停在半途
+ */
+var ssc_onTouchCancel = function () {
+  ssc_pinching = false;
+  ssc_dragging = false;
+  ssc_lastDist = 0;
+  if (ssc_scale <= 1) {
+    ssc_scale = 1;
+    ssc_tx = 0;
+    ssc_ty = 0;
+    ssc_apply(true);
+  } else {
+    ssc_clamp(true);
+  }
+};
+
+ssc_stage.addEventListener('touchstart', ssc_onTouchStart, { passive: true });
+ssc_stage.addEventListener('touchmove', ssc_onTouchMove, { passive: false });
+ssc_stage.addEventListener('touchend', ssc_onTouchEnd, { passive: true });
+ssc_stage.addEventListener('touchcancel', ssc_onTouchCancel, { passive: true });
+
+// 旋转屏幕 / 改变窗口尺寸：重算基准尺寸，保留缩放状态并夹回边界
+window.addEventListener('resize', ssc_measure);
+window.addEventListener('orientationchange', function () {
+  setTimeout(ssc_measure, 200);                     // 等系统完成横竖屏布局再测量
+});
+
+ssc_img.addEventListener('load', ssc_measure);
+if (ssc_img.complete) ssc_measure();
+</script>
+</body>
+</html>
