@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--
+  作者：孙绍词
+  建立时间：2026-11-16
+  使用模型：DeepSeek-V4.1-Flash
+  功能名称：任务一 · 事件侦探（触摸事件观察台）
+  功能简介：监听 touchstart / touchmove / touchend / touchcancel 与 click，
+            实时显示触发顺序、手指数量、坐标、与 touchstart 的时间差，
+            并统计各事件次数，用来观察五种手势的真实事件流；
+            页面下方给出五种操作的事件顺序表与三个验收问题的答案。
+            本任务不写业务逻辑，只做观察；前缀按项目约定用 ssc_。
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务一 · 事件侦探 | 触摸事件观察台</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif; background: #f2f5fa; color: #1f2937; }
+  .ssc_page { max-width: 520px; margin: 0 auto; padding: 18px 16px 44px; }
+
+  .ssc_back { display: inline-block; font-size: 13px; color: #0f2b5b; text-decoration: none; margin-bottom: 14px; }
+  .ssc_back::before { content: "← "; }
+
+  .ssc_head {
+    background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+    border-radius: 18px; padding: 22px 20px; color: #fff;
+    box-shadow: 0 10px 24px rgba(15, 43, 91, .28);
+  }
+  .ssc_head span { font-size: 12px; letter-spacing: 2px; color: #ffd166; }
+  .ssc_head h1 { font-size: 22px; margin-top: 8px; }
+  .ssc_head p { font-size: 13px; color: #d9e3f5; line-height: 1.9; margin-top: 8px; }
+
+  /* 触摸板 */
+  .ssc_pad {
+    margin-top: 16px; height: 180px; border-radius: 16px; background: #fff;
+    border: 2px dashed #b9cbea; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
+    user-select: none; -webkit-user-select: none; touch-action: none;
+    box-shadow: 0 6px 18px rgba(15, 43, 91, .08);
+  }
+  .ssc_pad.ssc_active { background: #eef4ff; border-color: #1d5bbf; }
+  .ssc_pad b { font-size: 15px; color: #0f2b5b; }
+  .ssc_pad span { font-size: 12.5px; color: #94a3b8; }
+
+  .ssc_chain { margin-top: 12px; min-height: 34px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ssc_chain i {
+    font-style: normal; font-size: 12px; padding: 4px 9px; border-radius: 6px;
+    background: #e8f0ff; color: #1d4ed8; border: 1px solid #c7d8f8;
+  }
+  .ssc_chain i.ssc_click { background: #fff7e6; color: #b45309; border-color: #fde68a; }
+
+  .ssc_stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ssc_stats div {
+    flex: 1 1 30%; background: #fff; border: 1px solid #e8ecf5; border-radius: 10px;
+    padding: 9px 10px; text-align: center;
+  }
+  .ssc_stats span { display: block; font-size: 11.5px; color: #94a3b8; }
+  .ssc_stats b { font-size: 19px; color: #0f2b5b; }
+
+  .ssc_toolbar { display: flex; gap: 8px; margin-top: 12px; }
+  .ssc_btn {
+    flex: 1; border: 0; border-radius: 10px; padding: 11px; font-size: 13.5px;
+    font-family: inherit; color: #fff; background: linear-gradient(135deg, #0f2b5b, #1d5bbf);
+  }
+  .ssc_btn.ssc_ghost { background: #fff; color: #0f2b5b; border: 1.5px solid #c7d8f8; }
+  .ssc_btn:active { transform: translateY(1px); }
+
+  .ssc_log {
+    margin-top: 12px; background: #0b1220; border-radius: 12px; padding: 10px 12px;
+    height: 208px; overflow-y: auto; font-family: Consolas, monospace; font-size: 12px;
+    line-height: 1.9; color: #cfe0ff;
+  }
+  .ssc_log p { white-space: nowrap; }
+  .ssc_log .ssc_ev { color: #7dd3fc; }
+  .ssc_log .ssc_ev2 { color: #fbbf24; }
+  .ssc_log .ssc_dim { color: #64748b; }
+
+  .ssc_note {
+    margin-top: 16px; background: #fff; border: 1px solid #e8ecf5;
+    border-radius: 14px; padding: 16px 18px; font-size: 13px; color: #475569; line-height: 2;
+  }
+  .ssc_note h3 { font-size: 14px; color: #0f2b5b; margin: 0 0 6px; }
+  .ssc_note h3 + p { margin-bottom: 10px; }
+  .ssc_note table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 6px 0 10px; }
+  .ssc_note th, .ssc_note td { border: 1px solid #e2e8f0; padding: 7px 8px; text-align: left; line-height: 1.7; }
+  .ssc_note th { background: #f4f7fd; color: #0f2b5b; font-weight: normal; }
+  .ssc_note code { background: #eef2ff; color: #1d4ed8; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
+  .ssc_note strong { color: #b45309; }
+  .ssc_faq dt { font-size: 13px; color: #0f2b5b; margin-top: 8px; }
+  .ssc_faq dd { font-size: 13px; color: #475569; line-height: 1.9; }
+</style>
+</head>
+<body>
+<div class="ssc_page">
+  <a class="ssc_back" href="../index.html">返回课堂目录</a>
+
+  <header class="ssc_head">
+    <span>任务一 · 事件侦探</span>
+    <h1>触摸事件观察台</h1>
+    <p>请在手机上打开。下面所有事件都由真实触摸产生：每按一次、每移动一下都会实时记录。</p>
+  </header>
+
+  <div class="ssc_pad" id="sscPad">
+    <b>在这个区域里操作</b>
+    <span>单击 · 拖动 · 快速滑 · 双指 · 长按</span>
+    <span id="sscFingers">当前手指：0 根</span>
+  </div>
+
+  <div class="ssc_chain" id="sscChain"><i class="ssc_dim">事件链会出现在这里</i></div>
+
+  <div class="ssc_stats">
+    <div><span>touchstart</span><b id="sscC1">0</b></div>
+    <div><span>touchmove</span><b id="sscC2">0</b></div>
+    <div><span>touchend</span><b id="sscC3">0</b></div>
+    <div><span>touchcancel</span><b id="sscC4">0</b></div>
+    <div><span>click</span><b id="sscC5">0</b></div>
+  </div>
+
+  <div class="ssc_toolbar">
+    <button class="ssc_btn ssc_ghost" id="sscClear" type="button">清空日志</button>
+    <button class="ssc_btn" id="sscWipe" type="button">重置全部</button>
+  </div>
+
+  <div class="ssc_log" id="sscLog"><p class="ssc_dim">等待触摸……</p></div>
+
+  <section class="ssc_note">
+    <h3>五种操作应看到的事件顺序</h3>
+    <table>
+      <tr><th>操作</th><th>事件顺序</th></tr>
+      <tr><td>单击</td><td>touchstart → touchend → click</td></tr>
+      <tr><td>向上拖动</td><td>touchstart → 多次 touchmove → touchend → click</td></tr>
+      <tr><td>向左快速滑</td><td>touchstart → 较少 touchmove → touchend → click</td></tr>
+      <tr><td>双指触摸</td><td>touchstart（touches=2）→ 多次 touchmove → touchend（逐根减少）</td></tr>
+      <tr><td>长按后抬起</td><td>touchstart →（约 600ms 无 move）→ touchend → click</td></tr>
+    </table>
+    <p>注意观察两项：拖动越远，<code>touchmove</code> 次数越多；<code>click</code> 永远排在 <code>touchend</code> 之后。</p>
+  </section>
+
+  <section class="ssc_note">
+    <h3>三个验收问题的答案</h3>
+    <dl class="ssc_faq">
+      <dt>① touchmove 的次数和手指移动的距离是什么关系？</dt>
+      <dd>正相关：距离越远次数越多，页面上直接能看到计数增长。<strong>但不是严格线性</strong>，因为浏览器按帧采样，滑得越快每帧跨的像素越多、次数反而变少；所以“快速滑”通常比“慢慢拖同样距离”的 touchmove 次数少。</dd>
+      <dt>② click 事件是在 touchstart 还是 touchend 之后？</dt>
+      <dd>在 <code>touchend</code> 之后。手指抬起、且没有发生明显移动时，浏览器才补发一次 <code>click</code>；如果移动距离较大，浏览器会判定为滑动而不发 click。</dd>
+      <dt>③ 如果把 touchend 换成 touchcancel，会发生什么？</dt>
+      <dd><code>touchcancel</code> 只在系统打断触摸时触发（来电、通知、手势被浏览器接管），正常抬手根本不会触发它。所以换掉之后：抬手收尾逻辑永远不执行，起点坐标不会复位、拖动状态卡住、滑动方向判断失效，页面表现为“滑完没反应”。正确做法是两个都监听，<code>touchcancel</code> 只用来做状态复位。</dd>
+    </dl>
+  </section>
+</div>
+
+<script>
+/**
+ * 作者：孙绍词
+ * 建立时间：2026-11-16
+ * 使用模型：DeepSeek-V4.1-Flash
+ * 变量说明：
+ *   ssc_counts  各事件累计次数
+ *   ssc_chain   当前这一轮手势的事件名数组（touchstart 时清空）
+ *   ssc_startAt 本次手势的起点时间，用来算每个事件的相对时间
+ *   ssc_lines   日志最多保留的条数，防止刷屏卡顿
+ */
+var ssc_pad = document.getElementById('sscPad');
+var ssc_log = document.getElementById('sscLog');
+var ssc_chainEl = document.getElementById('sscChain');
+var ssc_fingers = document.getElementById('sscFingers');
+
+var ssc_counts = { touchstart: 0, touchmove: 0, touchend: 0, touchcancel: 0, click: 0 };
+var ssc_chain = [];
+var ssc_startAt = 0;
+var ssc_lines = 0;
+var ssc_maxLines = 40;
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_paintChain
+ * 功能简介：把当前手势的事件链画成小标签，最多显示 10 个
+ */
+var ssc_paintChain = function () {
+  if (!ssc_chain.length) {
+    ssc_chainEl.innerHTML = '<i class="ssc_dim">事件链会出现在这里</i>';
+    return;
+  }
+  var ssc_html = '';
+  var ssc_from = Math.max(0, ssc_chain.length - 10);
+  for (var ssc_i = ssc_from; ssc_i < ssc_chain.length; ssc_i++) {
+    var ssc_cls = ssc_chain[ssc_i] === 'click' ? ' class="ssc_click"' : '';
+    ssc_html += '<i' + ssc_cls + '>' + ssc_chain[ssc_i] + '</i>';
+  }
+  ssc_chainEl.innerHTML = ssc_html;
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_paintCounts
+ * 功能简介：把五个事件的累计次数写到统计卡片
+ */
+var ssc_paintCounts = function () {
+  document.getElementById('sscC1').textContent = ssc_counts.touchstart;
+  document.getElementById('sscC2').textContent = ssc_counts.touchmove;
+  document.getElementById('sscC3').textContent = ssc_counts.touchend;
+  document.getElementById('sscC4').textContent = ssc_counts.touchcancel;
+  document.getElementById('sscC5').textContent = ssc_counts.click;
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_record
+ * 功能简介：记录一次事件。写日志（带相对时间、touches 数量、坐标），
+ *           并把事件名追加到事件链；touchstart 时重置事件链与计时
+ */
+var ssc_record = function (ssc_name, ssc_e) {
+  var ssc_now = Date.now();
+  if (ssc_name === 'touchstart') {
+    ssc_chain = [];
+    ssc_startAt = ssc_now;
+  }
+
+  ssc_counts[ssc_name] = (ssc_counts[ssc_name] || 0) + 1;
+  ssc_chain.push(ssc_name);
+
+  var ssc_t = (ssc_e.touches && ssc_e.touches.length) ? ssc_e.touches[0] : (ssc_e.changedTouches ? ssc_e.changedTouches[0] : null);
+  var ssc_x = ssc_t ? Math.round(ssc_t.clientX) : '-';
+  var ssc_y = ssc_t ? Math.round(ssc_t.clientY) : '-';
+  var ssc_touchNum = ssc_e.touches ? ssc_e.touches.length : '-';
+  var ssc_diff = ssc_startAt ? (ssc_now - ssc_startAt) : 0;
+  var ssc_evCls = ssc_name === 'click' ? 'ssc_ev2' : 'ssc_ev';
+
+  var ssc_row = document.createElement('p');
+  ssc_row.innerHTML = '<span class="ssc_dim">+' + ssc_diff + 'ms</span> ' +
+    '<span class="' + ssc_evCls + '">' + ssc_name + '</span> ' +
+    '<span class="ssc_dim">touches=' + ssc_touchNum + ' x=' + ssc_x + ' y=' + ssc_y + '</span>';
+
+  if (!ssc_lines) ssc_log.innerHTML = '';
+  ssc_log.insertBefore(ssc_row, ssc_log.firstChild);
+  ssc_lines = Math.min(ssc_lines + 1, ssc_maxLines);
+  while (ssc_log.childNodes.length > ssc_maxLines) {
+    ssc_log.removeChild(ssc_log.lastChild);
+  }
+
+  if (ssc_e.touches) {
+    ssc_fingers.textContent = '当前手指：' + ssc_e.touches.length + ' 根';
+  }
+  ssc_pad.classList.toggle('ssc_active', ssc_e.touches && ssc_e.touches.length > 0);
+
+  ssc_paintChain();
+  ssc_paintCounts();
+};
+
+ssc_pad.addEventListener('touchstart', function (ssc_e) { ssc_record('touchstart', ssc_e); }, { passive: true });
+ssc_pad.addEventListener('touchmove', function (ssc_e) { ssc_record('touchmove', ssc_e); }, { passive: true });
+ssc_pad.addEventListener('touchend', function (ssc_e) { ssc_record('touchend', ssc_e); }, { passive: true });
+ssc_pad.addEventListener('touchcancel', function (ssc_e) { ssc_record('touchcancel', ssc_e); }, { passive: true });
+ssc_pad.addEventListener('click', function (ssc_e) { ssc_record('click', ssc_e); });
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_clear
+ * 功能简介：清空日志列表与事件链，但保留累计次数
+ */
+var ssc_clear = function () {
+  ssc_log.innerHTML = '<p class="ssc_dim">等待触摸……</p>';
+  ssc_lines = 0;
+  ssc_chain = [];
+  ssc_paintChain();
+};
+
+/**
+ * 作者：孙绍词
+ * 函数名称：ssc_wipe
+ * 功能简介：把日志、事件链、次数、手指数全部归零，便于重新观察
+ */
+var ssc_wipe = function () {
+  ssc_counts = { touchstart: 0, touchmove: 0, touchend: 0, touchcancel: 0, click: 0 };
+  ssc_startAt = 0;
+  ssc_fingers.textContent = '当前手指：0 根';
+  ssc_clear();
+  ssc_paintCounts();
+};
+
+document.getElementById('sscClear').addEventListener('click', ssc_clear);
+document.getElementById('sscWipe').addEventListener('click', ssc_wipe);
+</script>
+</body>
+</html>
